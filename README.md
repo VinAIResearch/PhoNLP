@@ -25,7 +25,7 @@ pip install phonlp
 ```python
 import phonlp
 # Download phonlp model
-phonlp.download(path_save_model='./', language='vi')
+phonlp.download(path_save_model='./')
 
 #Load model
 model = phonlp.load_model(path_save_model='./')
