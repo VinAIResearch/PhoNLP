@@ -136,7 +136,7 @@ def train(args):
     #     pretrain_file = '{}/{}.pretrain.pt'.format(args['save_dir'], args['shorthand'])
     #     pretrain = Pretrain(pretrain_file, vec_file, args['pretrain_max_vocab'])
 
-    tokenizer = AutoTokenizer.from_pretrained(args['phobert_model'])
+    tokenizer = AutoTokenizer.from_pretrained(args['phobert_model'], use_fast=False)
     config_phobert = AutoConfig.from_pretrained(args['phobert_model'], output_hidden_states=True)
 
     # load data

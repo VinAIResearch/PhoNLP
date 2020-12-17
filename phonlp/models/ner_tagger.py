@@ -162,7 +162,7 @@ def train(args):
     # args_lib = parse_args()
     # bpe = fastBPE(args_lib)
     # config_phobert = RobertaConfig.from_pretrained(args['config_path'], output_hidden_states=True)
-    tokenizer = AutoTokenizer.from_pretrained(args['phobert_model'])
+    tokenizer = AutoTokenizer.from_pretrained(args['phobert_model'], use_fast=False)
     config_phobert = AutoConfig.from_pretrained(args['phobert_model'], output_hidden_states=True)
 
     # load data

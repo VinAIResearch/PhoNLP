@@ -47,8 +47,9 @@ class Tagger(BertPreTrainedModel):
         # recurrent layers
         self.drop_replacement = nn.Parameter(torch.randn(input_size) / np.sqrt(input_size))
         # classifiers
-        self.upos_hid = nn.Linear(self.config.to_dict()['hidden_size'], self.args['deep_biaff_hidden_dim'])
-        self.upos_clf = nn.Linear(self.args['deep_biaff_hidden_dim'], len(vocab['upos']))
+        # self.upos_hid = nn.Linear(self.config.to_dict()['hidden_size'], self.args['deep_biaff_hidden_dim'])
+        # self.upos_clf = nn.Linear(self.args['deep_biaff_hidden_dim'], len(vocab['upos']))
+        self.upos_clf = nn.Linear(self.config.to_dict()['hidden_size'], len(vocab['upos']))
         self.upos_clf.weight.data.zero_()
         self.upos_clf.bias.data.zero_()
 
@@ -102,8 +103,8 @@ class Tagger(BertPreTrainedModel):
         inputs = self.worddrop(inputs, self.drop_replacement)
 
         ######
-        upos_hid = F.relu(self.upos_hid(inputs))
-        upos_pred = self.upos_clf(self.drop(upos_hid))
+        # upos_hid = F.relu(self.upos_hid(inputs))
+        upos_pred = self.upos_clf(inputs)
 
         preds = [pad(upos_pred).max(2)[1]]
 
