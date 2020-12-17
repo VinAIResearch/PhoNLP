@@ -57,7 +57,12 @@ You can also use phonlp tool to annotate an input raw text corpus by using follo
 ```python
 phonlp.annotate(model, input_file='input.txt', output_file='output.txt', type='corpus')
 ```
-
+Input file includes word segmented text and follows by the below format:
+```sh
+" Bệnh bệnh 623 " , nữ , 83 tuổi , trú ở phường Điện_Nam_Trung , thị_xã Điện_Bàn . 
+" Bệnh_nhân 1.000 " , tại Khánh_Hoà , nam , 33 tuổi , là chuyên_gia , quốc_tịch Philippines . 
+```
+Output file format will similar the above output.
 
 
 [comment]: <> (_For more examples and usage, please refer to the [Wiki][wiki]._)
@@ -75,8 +80,25 @@ And testing model:
 ```sh
 python3 train_jointmodel_3task.py --save_dir path_save_model --mode predict --eval_file_dep path_to_dep_test_file --eval_file_pos path_to_pos_test_file --eval_file_ner path_to_ner_test_file
 ```
+Data format for dependency parsing task follows by CoNLL-U format. You can see at https://universaldependencies.org/format.html .
 
+Data format for NER and POS follow by the below format :
 
+```sh
+Tôi	P
+
+là	V
+
+sinh_viên	N
+
+trường	N	
+
+đại_học	N	
+
+Bách_Khoa	Np
+
+.	CH
+```
 
 ## License
 
