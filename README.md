@@ -62,12 +62,18 @@ phonlp.annotate(model, input_file='input.txt', output_file='output.txt', type='c
 
 [comment]: <> (_For more examples and usage, please refer to the [Wiki][wiki]._)
 
-## Training Model
+## Training and Evaluating Model
 
-You can use
+You can use the below commands to train model:
 
 ```sh
-python3 train_jointmodel_3task.py --save_dir path_save_model --train_file --
+python3 train_jointmodel_3task.py --save_dir path_save_model --train_file_dep path_to_dep_training_file --eval_file_dep path_to_dep_validation_file --train_file_pos path_to_pos_training_file --eval_file_pos path_to_pos_validation_file --train_file_ner path_to_ner_training_file --eval_file_ner path_to_ner_validation_file
+```
+
+And testing model:
+
+```sh
+python3 train_jointmodel_3task.py --save_dir path_save_model --mode predict --eval_file_dep path_to_dep_test_file --eval_file_pos path_to_pos_test_file --eval_file_ner path_to_ner_test_file
 ```
 
 
