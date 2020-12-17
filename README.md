@@ -1,0 +1,97 @@
+# PhoNLP: A joint multi-task learning model for Vietnamese part-of-speech tagging, named entity recognition and dependency parsing
+
+[comment]: <> (> Short blurb about what your product does.)
+
+[comment]: <> ([![NPM Version][npm-image]][npm-url])
+
+[comment]: <> ([![Build Status][travis-image]][travis-url])
+
+[comment]: <> ([![Downloads Stats][npm-downloads]][npm-url])
+
+[comment]: <> (One to two paragraph statement about your product and what it does.)
+
+![](header.png)
+
+## Installation
+
+OS X & Linux:
+
+```sh
+pip install phonlp
+```
+
+## Usage example
+
+```python
+import phonlp
+# Download phonlp model
+phonlp.download(path_save_model='./', language='vi')
+
+#Load model
+model = phonlp.load_model(path_save_model='./')
+
+
+# INPUT TEXT MUST BE ALREADY WORD-SEGMENTED!
+line = "Tôi là sinh_viên trường đại_học Bách_khoa ."
+
+#annotate sentence
+phonlp.annotate(model, text=line, type='sentence')
+```
+This command will print out the results for input sentence follow by Universal Dependencies parse of that sentence. The output should look like:
+```sh
+1	Tôi	_	_	P	_	2	sub	_	O
+
+2	là	_	_	V	_	0	root	_	O
+
+3	sinh_viên	_	_	N	_	2	vmod	_	O
+
+4	trường	_	_	N	_	3	nmod	_	B-ORG
+
+5	đại_học	_	_	N	_	4	nmod	_	I-ORG
+
+6	Bách_Khoa	_	_	Np	_	4	nmod	_	I-ORG
+
+7	.	_	_	CH	_	2	punct	_	O
+```
+You can also use phonlp tool to annotate an input raw text corpus by using following command:
+```python
+phonlp.annotate(model, input_file='input.txt', output_file='output.txt', type='corpus')
+```
+
+
+
+[comment]: <> (_For more examples and usage, please refer to the [Wiki][wiki]._)
+
+## Training Model
+
+You can use
+
+```sh
+python3 train_jointmodel_3task.py --save_dir path_save_model --train_file --
+```
+
+
+
+## License
+
+	MIT License
+
+	Copyright (c) 2020 VinAI Research
+
+	Permission is hereby granted, free of charge, to any person obtaining a copy
+	of this software and associated documentation files (the "Software"), to deal
+	in the Software without restriction, including without limitation the rights
+	to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+	copies of the Software, and to permit persons to whom the Software is
+	furnished to do so, subject to the following conditions:
+
+	The above copyright notice and this permission notice shall be included in all
+	copies or substantial portions of the Software.
+
+	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+	AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+	SOFTWARE.

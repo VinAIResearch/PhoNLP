@@ -1,0 +1,6 @@
+transformers
+torch==1.4.0
+pytest
+gdown
+numpy
+tqdm
