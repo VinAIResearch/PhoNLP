@@ -25,39 +25,33 @@ pip install phonlp
 ```python
 import phonlp
 # Download phonlp model
-phonlp.download(path_save_model='./')
+phonlp.download(model_folder_path='./')
 
 # Load model
-model = phonlp.load_model(path_save_model='./')
+model = phonlp.load(model_folder_path='./')
 
 # Input text must be already word-segmented!
-line = "Tôi là sinh_viên trường đại_học Bách_khoa ."
+line = "Tôi đang làm_việc tại VinAI ."
 
 # Annotate sentence
-phonlp.annotate(model, text=line, type='sentence')
+model.print_out(model.annotate(text=line)
 
-# 
-phonlp.annotate(model, input_file='input.txt', output_file='output.txt', type='corpus')
+# Annotate corpus 
+model.annotate(input_file='input.txt', output_file='output.txt')
 ```
 This command will print out the results for input sentence follow by Universal Dependencies parse of that sentence. The output should look like:
 ```sh
-1	Tôi	_	_	P	_	2	sub	_	O
+1	Tôi	P	O	2	sub	
 
-2	là	_	_	V	_	0	root	_	O
+2	đang	R	O	3	adv
 
-3	sinh_viên	_	_	N	_	2	vmod	_	O
+3	làm_việc	V	O	0	root
 
-4	trường	_	_	N	_	3	nmod	_	B-ORG
+4	tại	E	O	3	loc
 
-5	đại_học	_	_	N	_	4	nmod	_	I-ORG
+5	VinAI	Np 	B-ORG	4	prob
 
-6	Bách_Khoa	_	_	Np	_	4	nmod	_	I-ORG
-
-7	.	_	_	CH	_	2	punct	_	O
-```
-You can also use phonlp tool to annotate an input raw text corpus by using following command:
-```python
-phonlp.annotate(model, input_file='input.txt', output_file='output.txt', type='corpus')
+6	.	CH	O	3	punct
 ```
 Input file includes word segmented text and follows by the below format:
 ```sh
@@ -89,15 +83,13 @@ Data format for NER and POS follow by the below format :
 ```sh
 Tôi	P
 
-là	V
+đang	R
 
-sinh_viên	N
+làm_việc	V
 
-trường	N	
+tại	E
 
-đại_học	N	
-
-Bách_Khoa	Np
+VinAI	Np
 
 .	CH
 ```
