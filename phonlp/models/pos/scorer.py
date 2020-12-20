@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Utils and wrappers for scoring taggers.
 """
@@ -7,7 +6,6 @@ import logging
 from models.common.utils import ud_scores
 
 logger = logging.getLogger('PhoToolkit')
-
 
 def score(system_conllu_file, gold_conllu_file, verbose=True):
     """ Wrapper for tagger scorer. """
@@ -21,7 +19,6 @@ def score(system_conllu_file, gold_conllu_file, verbose=True):
         logger.info("UPOS\tXPOS\tUFeats\tAllTags")
         logger.info("{:.2f}\t{:.2f}\t{:.2f}\t{:.2f}".format(*scores))
     return p, r, f
-
 
 def score_acc(pred_pos, gold_pos):
     """ Wrapper for tagger scorer. """

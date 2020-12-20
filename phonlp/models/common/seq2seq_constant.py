@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Constants for seq2seq models.
 """

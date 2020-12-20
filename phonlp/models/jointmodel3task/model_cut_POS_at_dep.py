@@ -42,15 +42,15 @@ class JointModel(BertPreTrainedModel):
         self.upos_clf.weight.data.zero_()
         self.upos_clf.bias.data.zero_()
 
-        self.dep_hid = nn.Linear(self.input_size + self.args['tag_emb_dim'], self.input_size + self.args['tag_emb_dim'])
+        self.dep_hid = nn.Linear(self.input_size, self.input_size)
 
         # classifiers
-        self.unlabeled = DeepBiaffineScorer(self.input_size + self.args['tag_emb_dim'], self.input_size + self.args['tag_emb_dim'], self.args['deep_biaff_hidden_dim'], 1, pairwise=True, dropout=args['dropout'])
-        self.deprel = DeepBiaffineScorer(self.input_size + self.args['tag_emb_dim'], self.input_size + self.args['tag_emb_dim'], self.args['deep_biaff_hidden_dim'], len(vocab['deprel']), pairwise=True, dropout=args['dropout'])
+        self.unlabeled = DeepBiaffineScorer(self.input_size, self.input_size, self.args['deep_biaff_hidden_dim'], 1, pairwise=True, dropout=args['dropout'])
+        self.deprel = DeepBiaffineScorer(self.input_size, self.input_size, self.args['deep_biaff_hidden_dim'], len(vocab['deprel']), pairwise=True, dropout=args['dropout'])
         if args['linearization']:
-            self.linearization = DeepBiaffineScorer(self.input_size + self.args['tag_emb_dim'], self.input_size + self.args['tag_emb_dim'], self.args['deep_biaff_hidden_dim'], 1, pairwise=True, dropout=args['dropout'])
+            self.linearization = DeepBiaffineScorer(self.input_size, self.input_size, self.args['deep_biaff_hidden_dim'], 1, pairwise=True, dropout=args['dropout'])
         if args['distance']:
-            self.distance = DeepBiaffineScorer(self.input_size + self.args['tag_emb_dim'], self.input_size + self.args['tag_emb_dim'], self.args['deep_biaff_hidden_dim'], 1, pairwise=True, dropout=args['dropout'])
+            self.distance = DeepBiaffineScorer(self.input_size, self.input_size, self.args['deep_biaff_hidden_dim'], 1, pairwise=True, dropout=args['dropout'])
 
         self.ner_tag_clf = nn.Linear(self.input_size + self.args['tag_emb_dim'], len(self.vocab['ner_tag']))
         self.ner_tag_clf.bias.data.zero_()
@@ -132,15 +132,15 @@ class JointModel(BertPreTrainedModel):
         def pad(x):
             return pad_packed_sequence(PackedSequence(x, phobert_emb.batch_sizes), batch_first=True)[0]
 
-        upos_embed_matrix_dup = self.upos_emb_matrix_dep.repeat(pos_dis.size(0), 1, 1)
-        pos_emb = torch.matmul(pos_dis, upos_embed_matrix_dup)
-        pos_emb = pack(pos_emb)
-        inputs += [pos_emb]
+        # upos_embed_matrix_dup = self.upos_emb_matrix_dep.repeat(pos_dis.size(0), 1, 1)
+        # pos_emb = torch.matmul(pos_dis, upos_embed_matrix_dup)
+        # pos_emb = pack(pos_emb)
+        # inputs += [pos_emb]
+        #
+        # inputs = torch.cat([x.data for x in inputs], 1)
+        # inputs = self.worddrop_dep(inputs, self.drop_replacement_dep)
 
-        inputs = torch.cat([x.data for x in inputs], 1)
-        inputs = self.worddrop_dep(inputs, self.drop_replacement_dep)
-
-        hidden_out = self.dep_hid(inputs)
+        hidden_out = self.dep_hid(inputs[0].data)
         hidden_out = pad(hidden_out)
 
         unlabeled_scores = self.unlabeled(self.drop_dep(hidden_out), self.drop_dep(hidden_out)).squeeze(3)

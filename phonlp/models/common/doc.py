@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Basic data structures
 """
@@ -26,7 +25,6 @@ NER = 'ner'
 START_CHAR = 'start_char'
 END_CHAR = 'end_char'
 TYPE = 'type'
-
 
 class Document:
     """ A document class that stores attributes of a document and carries a list of sentences.
@@ -67,7 +65,7 @@ class Document:
     def sentences(self, value):
         """ Set the list of tokens for this document. """
         self._sentences = value
-
+    
     @property
     def num_tokens(self):
         """ Access the number of tokens for this document. """
@@ -113,8 +111,7 @@ class Document:
         for tokens in sentences:
             self.sentences.append(Sentence(tokens, doc=self))
             begin_idx, end_idx = self.sentences[-1].tokens[0].start_char, self.sentences[-1].tokens[-1].end_char
-            if all([self.text is not None, begin_idx is not None, end_idx is not None]):
-                self.sentences[-1].text = self.text[begin_idx: end_idx]
+            if all([self.text is not None, begin_idx is not None, end_idx is not None]): self.sentences[-1].text = self.text[begin_idx: end_idx]
 
         self.num_tokens = sum([len(sentence.tokens) for sentence in self.sentences])
         self.num_words = sum([len(sentence.words) for sentence in self.sentences])
@@ -128,7 +125,7 @@ class Document:
             fields: name of the fields as a list
             as_sentences: if True, return the fields as a list of sentences; otherwise as a whole list
             from_token: if True, get the fields from Token; otherwise from Word
-
+        
         Returns:
             All requested fields.
         """
@@ -202,20 +199,19 @@ class Document:
                 if not m and not n:
                     for word in token.words:
                         word.id = str(idx_w)
-                        word.head, word.deprel = None, None  # delete dependency information
+                        word.head, word.deprel = None, None # delete dependency information
                 else:
                     expanded = [x for x in expansions[idx_e].split(' ') if len(x) > 0]
                     idx_e += 1
                     idx_w_end = idx_w + len(expanded) - 1
-                    token.misc = None if token.misc == 'MWT=Yes' else '|'.join(
-                        [x for x in token.misc.split('|') if x != 'MWT=Yes'])
+                    token.misc = None if token.misc == 'MWT=Yes' else '|'.join([x for x in token.misc.split('|') if x != 'MWT=Yes'])
                     token.id = f'{idx_w}-{idx_w_end}'
                     token.words = []
                     for i, e_word in enumerate(expanded):
                         token.words.append(Word({ID: str(idx_w + i), TEXT: e_word}))
                     idx_w = idx_w_end
-            sentence._process_tokens(sentence.to_dict())  # reprocess to update sentence.words and sentence.dependencies
-        self._process_sentences(self.to_dict())  # reprocess to update number of words
+            sentence._process_tokens(sentence.to_dict()) # reprocess to update sentence.words and sentence.dependencies
+        self._process_sentences(self.to_dict()) # reprocess to update number of words
         assert idx_e == len(expansions), "{} {}".format(idx_e, len(expansions))
         return
 
@@ -233,8 +229,7 @@ class Document:
                     src = token.text
                     dst = ' '.join([word.text for word in token.words])
                     expansions.append([src, dst])
-        if evaluation:
-            expansions = [e[0] for e in expansions]
+        if evaluation: expansions = [e[0] for e in expansions]
         return expansions
 
     def build_ents(self):
@@ -284,15 +279,14 @@ class Sentence:
         st, en = -1, -1
         self.tokens, self.words = [], []
         for i, entry in enumerate(tokens):
-            if ID not in entry:  # manually set a 1-based id for word if not exist
+            if ID not in entry: # manually set a 1-based id for word if not exist
                 entry[ID] = str(i+1)
             m = multi_word_token_id.match(entry.get(ID))
             n = multi_word_token_misc.match(entry.get(MISC)) if entry.get(MISC, None) is not None else None
-            if m or n:  # if this token is a multi-word token
-                if m:
-                    st, en = int(m.group(1)), int(m.group(2))
+            if m or n: # if this token is a multi-word token
+                if m: st, en = int(m.group(1)), int(m.group(2))
                 self.tokens.append(Token(entry))
-            else:  # else this token is a word
+            else: # else this token is a word
                 new_word = Word(entry)
                 self.words.append(new_word)
                 idx = int(entry.get(ID))
@@ -305,9 +299,8 @@ class Sentence:
         # check if there is dependency info
         is_complete_dependencies = all([word.head is not None and word.deprel is not None for word in self.words])
         is_complete_words = (len(self.words) >= len(self.tokens)) and (len(self.words) == int(self.words[-1].id))
-        if is_complete_dependencies and is_complete_words:
-            self.build_dependencies()
-
+        if is_complete_dependencies and is_complete_words: self.build_dependencies()
+    
     @property
     def doc(self):
         """ Access the parent doc of this span. """
@@ -357,7 +350,7 @@ class Sentence:
     def words(self, value):
         """ Set the list of words for this sentence. """
         self._words = value
-
+    
     @property
     def ents(self):
         """ Access the list of entities in this sentence. """
@@ -377,7 +370,7 @@ class Sentence:
     def entities(self, value):
         """ Set the list of entities in this sentence. """
         self._ents = value
-
+    
     def build_ents(self):
         """ Build the list of entities by iterating over all tokens. Return all entities as a list.
 
@@ -479,8 +472,7 @@ class Token:
         """
         for item in self._misc.split('|'):
             key_value = item.split('=', 1)
-            if len(key_value) == 1:
-                continue  # some key_value can not be splited
+            if len(key_value) == 1: continue # some key_value can not be splited
             key, value = key_value
             if key in [START_CHAR, END_CHAR]:
                 value = int(value)
@@ -540,7 +532,7 @@ class Token:
     def end_char(self):
         """ Access the end character index for this token in the raw text. """
         return self._end_char
-
+    
     @property
     def ner(self):
         """ Access the NER tag of this token. Example: 'B-ORG'"""
@@ -576,7 +568,6 @@ class Token:
     def _is_null(self, value):
         return (value is None) or (value == '_')
 
-
 class Word:
     """ A word class that stores attributes of a word.
     """
@@ -584,8 +575,7 @@ class Word:
     def __init__(self, word_entry):
         """ Construct a word given a dictionary format word entry.
         """
-        assert word_entry.get(ID) and word_entry.get(
-            TEXT), 'id and text should be included for the word. {}'.format(word_entry)
+        assert word_entry.get(ID) and word_entry.get(TEXT), 'id and text should be included for the word. {}'.format(word_entry)
         self._id, self._text, self._lemma, self._upos, self._xpos, self._feats, self._head, self._deprel, self._deps, \
             self._misc, self._parent = [None] * 11
 
@@ -608,8 +598,7 @@ class Word:
         """
         for item in self._misc.split('|'):
             key_value = item.split('=', 1)
-            if len(key_value) == 1:
-                continue  # some key_value can not be splited
+            if len(key_value) == 1: continue # some key_value can not be splited
             key, value = key_value
             # set attribute
             attr = f'_{key}'
@@ -772,7 +761,7 @@ class Span:
         must be provided to construct a span (otherwise the text of the span cannot be initialized).
         """
         assert span_entry is not None or (tokens is not None and type is not None), \
-            'Either a span_entry or a token list needs to be provided to construct a span.'
+                'Either a span_entry or a token list needs to be provided to construct a span.'
         assert doc is not None, 'A parent doc must be provided to construct a span.'
         self._text, self._type, self._start_char, self._end_char = [None] * 4
         self._tokens = []
@@ -834,7 +823,7 @@ class Span:
     def tokens(self, value):
         """ Set the span's list of tokens. """
         self._tokens = value
-
+    
     @property
     def words(self):
         """ Access reference to a list of words that correspond to this span. """
@@ -887,5 +876,5 @@ class Span:
     def pretty_print(self):
         """ Print the span in one line. """
         span_dict = self.to_dict()
-        feature_str = ";".join(["{}={}".format(k, v) for k, v in span_dict.items()])
+        feature_str = ";".join(["{}={}".format(k,v) for k,v in span_dict.items()])
         return f"<{self.__class__.__name__} {feature_str}>"

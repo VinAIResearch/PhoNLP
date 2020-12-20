@@ -27,15 +27,17 @@ import phonlp
 # Download phonlp model
 phonlp.download(path_save_model='./')
 
-#Load model
+# Load model
 model = phonlp.load_model(path_save_model='./')
 
-
-# INPUT TEXT MUST BE ALREADY WORD-SEGMENTED!
+# Input text must be already word-segmented!
 line = "Tôi là sinh_viên trường đại_học Bách_khoa ."
 
-#annotate sentence
+# Annotate sentence
 phonlp.annotate(model, text=line, type='sentence')
+
+# 
+phonlp.annotate(model, input_file='input.txt', output_file='output.txt', type='corpus')
 ```
 This command will print out the results for input sentence follow by Universal Dependencies parse of that sentence. The output should look like:
 ```sh

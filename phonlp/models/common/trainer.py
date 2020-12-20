@@ -1,6 +1,4 @@
-# -*- coding: utf-8 -*-
 import torch
-
 
 class Trainer:
     def change_lr(self, new_lr):
@@ -9,9 +7,9 @@ class Trainer:
 
     def save(self, filename):
         savedict = {
-            'model': self.model.state_dict(),
-            'optimizer': self.optimizer.state_dict()
-        }
+                   'model': self.model.state_dict(),
+                   'optimizer': self.optimizer.state_dict()
+                   }
         torch.save(savedict, filename)
 
     def load(self, filename):

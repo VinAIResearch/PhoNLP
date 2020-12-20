@@ -52,7 +52,7 @@ class JointModel(BertPreTrainedModel):
         if args['distance']:
             self.distance = DeepBiaffineScorer(self.input_size + self.args['tag_emb_dim'], self.input_size + self.args['tag_emb_dim'], self.args['deep_biaff_hidden_dim'], 1, pairwise=True, dropout=args['dropout'])
 
-        self.ner_tag_clf = nn.Linear(self.input_size + self.args['tag_emb_dim'], len(self.vocab['ner_tag']))
+        self.ner_tag_clf = nn.Linear(self.input_size, len(self.vocab['ner_tag']))
         self.ner_tag_clf.bias.data.zero_()
         # criterion
         self.crit_ner = CRFLoss(len(self.vocab['ner_tag']))
@@ -110,14 +110,14 @@ class JointModel(BertPreTrainedModel):
         def pad(x):
             return pad_packed_sequence(PackedSequence(x, phobert_emb.batch_sizes), batch_first=True)[0]
 
-        upos_embed_matrix_dup = self.upos_emb_matrix_ner.repeat(pos_dis.size(0), 1, 1)
-        pos_emb = torch.matmul(pos_dis, upos_embed_matrix_dup)
-        pos_emb = pack(pos_emb)
-        inputs += [pos_emb]
-
-        inputs = torch.cat([x.data for x in inputs], 1)
-        inputs = self.worddrop_ner(inputs, self.drop_replacement_ner)
-        ner_pred = self.ner_tag_clf(inputs)
+        # upos_embed_matrix_dup = self.upos_emb_matrix_ner.repeat(pos_dis.size(0), 1, 1)
+        # pos_emb = torch.matmul(pos_dis, upos_embed_matrix_dup)
+        # pos_emb = pack(pos_emb)
+        # inputs += [pos_emb]
+        #
+        # inputs = torch.cat([x.data for x in inputs], 1)
+        # inputs = self.worddrop_ner(inputs, self.drop_replacement_ner)
+        ner_pred = self.ner_tag_clf(inputs[0].data)
 
         logits = pad(F.relu(ner_pred)).contiguous()
         loss, trans = self.crit_ner(logits, word_mask, tags)

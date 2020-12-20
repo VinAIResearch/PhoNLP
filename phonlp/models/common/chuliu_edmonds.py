@@ -1,8 +1,6 @@
-# -*- coding: utf-8 -*-
 # Adapted from Tim's code here: https://github.com/tdozat/Parser-v3/blob/master/scripts/chuliu_edmonds.py
 
 import numpy as np
-
 
 def tarjan(tree):
     """"""
@@ -13,8 +11,7 @@ def tarjan(tree):
     stack = list()
     _index = [0]
     cycles = []
-    # -------------------------------------------------------------
-
+    #-------------------------------------------------------------
     def strong_connect(i):
         _index[0] += 1
         index = _index[-1]
@@ -42,23 +39,22 @@ def tarjan(tree):
             if cycle.sum() > 1:
                 cycles.append(cycle)
         return
-    # -------------------------------------------------------------
+    #-------------------------------------------------------------
     for i in range(len(tree)):
         if indices[i] == -1:
             strong_connect(i)
     return cycles
 
-
 def chuliu_edmonds(scores):
     """"""
 
-    np.fill_diagonal(scores, -float('inf'))  # prevent self-loops
+    np.fill_diagonal(scores, -float('inf')) # prevent self-loops
     scores[0] = -float('inf')
-    scores[0, 0] = 0
+    scores[0,0] = 0
     tree = np.argmax(scores, axis=1)
     cycles = tarjan(tree)
-    # print(scores)
-    # print(cycles)
+    #print(scores)
+    #print(cycles)
     if not cycles:
         return tree
     else:
@@ -81,27 +77,27 @@ def chuliu_edmonds(scores):
         #print(cycle_locs, noncycle_locs)
 
         # scores of cycle's potential heads; (c x n) - (c) + () -> (n x c) in R
-        metanode_head_scores = scores[cycle][:, noncycle] - cycle_scores[:, None] + cycle_score
+        metanode_head_scores = scores[cycle][:,noncycle] - cycle_scores[:,None] + cycle_score
         # scores of cycle's potential dependents; (n x c) in R
-        metanode_dep_scores = scores[noncycle][:, cycle]
+        metanode_dep_scores = scores[noncycle][:,cycle]
         # best noncycle head for each cycle dependent; (n) in c
         metanode_heads = np.argmax(metanode_head_scores, axis=0)
         # best cycle head for each noncycle dependent; (n) in c
         metanode_deps = np.argmax(metanode_dep_scores, axis=1)
 
         # scores of noncycle graph; (n x n) in R
-        subscores = scores[noncycle][:, noncycle]
+        subscores = scores[noncycle][:,noncycle]
         # pad to contracted graph; (n+1 x n+1) in R
-        subscores = np.pad(subscores, ((0, 1), (0, 1)), 'constant')
+        subscores = np.pad(subscores, ( (0,1) , (0,1) ), 'constant')
         # set the contracted graph scores of cycle's potential heads; (c x n)[:, (n) in n] in R -> (n) in R
         subscores[-1, :-1] = metanode_head_scores[metanode_heads, np.arange(len(noncycle_locs))]
         # set the contracted graph scores of cycle's potential dependents; (n x c)[(n) in n] in R-> (n) in R
-        subscores[:-1, -1] = metanode_dep_scores[np.arange(len(noncycle_locs)), metanode_deps]
+        subscores[:-1,-1] = metanode_dep_scores[np.arange(len(noncycle_locs)), metanode_deps]
 
         # MST with contraction; (n+1) in n+1
         contracted_tree = chuliu_edmonds(subscores)
         # head of the cycle; () in n
-        # print(contracted_tree)
+        #print(contracted_tree)
         cycle_head = contracted_tree[-1]
         # fixed tree: (n) in n+1
         contracted_tree = contracted_tree[:-1]
@@ -128,9 +124,7 @@ def chuliu_edmonds(scores):
         #print(4, new_tree)
         return new_tree
 
-# ===============================================================
-
-
+#===============================================================
 def chuliu_edmonds_one_root(scores):
     """"""
 
@@ -140,17 +134,17 @@ def chuliu_edmonds_one_root(scores):
     if len(roots_to_try) == 1:
         return tree
 
-    # -------------------------------------------------------------
+    #-------------------------------------------------------------
     def set_root(scores, root):
-        root_score = scores[root, 0]
+        root_score = scores[root,0]
         scores = np.array(scores)
-        scores[1:, 0] = -float('inf')
+        scores[1:,0] = -float('inf')
         scores[root] = -float('inf')
-        scores[root, 0] = 0
+        scores[root,0] = 0
         return scores, root_score
-    # -------------------------------------------------------------
+    #-------------------------------------------------------------
 
-    best_score, best_tree = -np.inf, None  # This is what's causing it to crash
+    best_score, best_tree = -np.inf, None # This is what's causing it to crash
     for root in roots_to_try:
         _scores, root_score = set_root(scores, root)
         _tree = chuliu_edmonds(_scores)

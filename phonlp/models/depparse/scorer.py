@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Utils and wrappers for scoring parsers.
 """
@@ -7,7 +6,6 @@ import logging
 from models.common.utils import ud_scores
 
 logger = logging.getLogger('PhoNLPToolkit')
-
 
 def score(system_conllu_file, gold_conllu_file, verbose=True):
     """ Wrapper for UD parser scorer. """
@@ -22,3 +20,4 @@ def score(system_conllu_file, gold_conllu_file, verbose=True):
         logger.info("UAS\tLAS")
         logger.info("{:.2f}\t{:.2f}".format(*scores))
     return p, r, f, el2.f1
+
