@@ -6,14 +6,14 @@ from transformers import AutoConfig, AutoTokenizer
 import gdown
 
 
-def download(model_folder_path, url="https://drive.google.com/uc?id=1ZFfyppGc4QKdeGve1kvpj44GTlM9Rl-H"):
-    gdown.download(url, model_folder_path)
+def download(save_dir, url="https://drive.google.com/uc?id=1ZFfyppGc4QKdeGve1kvpj44GTlM9Rl-H"):
+    gdown.download(url, save_dir)
 
-def load(model_folder_path='./'):
-    if model_folder_path[len(model_folder_path) - 1] == '/':
-        model_file = model_folder_path + "VnDTv1.1_jointmodel.pt"
+def load(save_dir='./'):
+    if save_dir[len(save_dir) - 1] == '/':
+        model_file = save_dir + "VnDTv1.1_jointmodel.pt"
     else:
-        model_file = model_folder_path + "VnDTv1.1_jointmodel.pt"
+        model_file = save_dir + "VnDTv1.1_jointmodel.pt"
     tokenizer = AutoTokenizer.from_pretrained('vinai/phobert-base', use_fast=False)
     config_phobert = AutoConfig.from_pretrained('vinai/phobert-base', output_hidden_states=True)
     print("Loading model from: {}".format(model_file))

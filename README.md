@@ -66,6 +66,7 @@ Input file includes word segmented text and follows by the below format:
 ```
 Output file format will similar the above output.
 
+Additionally, you can also obtain the output following by CoNLL-U format. To obtain the CoNLL-U format output, you just need add parameter `output_type='conll-u'` in model.annotate() function.
 
 [comment]: <> (_For more examples and usage, please refer to the [Wiki][wiki]._)
 
@@ -74,13 +75,13 @@ Output file format will similar the above output.
 You can use the below commands to train model:
 
 ```sh
-python3 train_phonlp.py --save_dir model_folder_path --train_file_dep path_to_dep_training_file --eval_file_dep path_to_dep_validation_file --train_file_pos path_to_pos_training_file --eval_file_pos path_to_pos_validation_file --train_file_ner path_to_ner_training_file --eval_file_ner path_to_ner_validation_file
+python3 run_phonlp.py --save_dir model_folder_path --train_file_dep path_to_dep_training_file --eval_file_dep path_to_dep_validation_file --train_file_pos path_to_pos_training_file --eval_file_pos path_to_pos_validation_file --train_file_ner path_to_ner_training_file --eval_file_ner path_to_ner_validation_file
 ```
 
 And testing model:
 
 ```sh
-python3 train_phonlp.py --save_dir model_folder_path --mode predict --eval_file_dep path_to_dep_test_file --eval_file_pos path_to_pos_test_file --eval_file_ner path_to_ner_test_file
+python3 run_phonlp.py --save_dir model_folder_path --mode predict --eval_file_dep path_to_dep_test_file --eval_file_pos path_to_pos_test_file --eval_file_ner path_to_ner_test_file
 ```
 Data format for dependency parsing task follows by CoNLL-U format. You can see at https://universaldependencies.org/format.html .
 
@@ -103,7 +104,7 @@ VinAI	Np
 You can also annotate corpus from raw text by using the command:
 
 ```sh
-python3 train_phonlp.py --save_dir model_folder_path --mode annotate --input_file path_to_input_file --output_file path_to_output_file
+python3 run_phonlp.py --save_dir model_folder_path --mode annotate --input_file path_to_input_file --output_file path_to_output_file
 ```
 
 
