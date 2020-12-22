@@ -42,7 +42,7 @@ model.print_out(model.annotate(text="Tôi đang làm_việc tại VinAI ."))
 ```
 This command will print out the results for input sentence follow by Universal Dependencies parse of that sentence. The output should look like:
 ```sh
-1	Tôi	P	O	2	sub	
+1	Tôi	P	O	3	sub	
 
 2	đang	R	O	3	adv
 
