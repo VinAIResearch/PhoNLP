@@ -61,7 +61,7 @@ Input file includes word segmented text and follows by the below format:
 ```
 Output file format will similar the above output.
 
-Additionally, you can also obtain the output following by CoNLL-U format. To obtain the CoNLL-U format output, you just need add parameter `output_type='conll-u'` in model.annotate() function.
+Additionally, you can also obtain the output following by CoNLL-U format. To obtain the CoNLL-U format output, you just need add parameter `output_type='conll-u'` in model.annotate() function. Also, depending on your computer's memory, you can also set parameter `batch_size=batch_size` you want when you annotate corpus to increase the speed of annotation.
 
 [comment]: <> (_For more examples and usage, please refer to the [Wiki][wiki]._)
 
