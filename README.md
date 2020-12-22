@@ -31,10 +31,10 @@ pip install -e .
 ```python
 import phonlp
 # Download phonlp model
-phonlp.download(model_folder_path='./')
+phonlp.download(save_dir='./')
 
 # Load model
-model = phonlp.load(model_folder_path='./')
+model = phonlp.load(save_dir='./')
 
 # Input text must be already word-segmented!
 line = "Tôi đang làm_việc tại VinAI ."
