@@ -14,10 +14,16 @@
 
 ## Installation
 
-OS X & Linux:
-
+PhoNLP supports Python 3.6 or later. You can install PhoNLP via pipby using the command line: 
 ```sh
 pip install phonlp
+```
+You can also install from source by using the below command lines:
+
+```sh
+git clone https://github.com/VinAIResearch/PhoNLP
+cd PhoNLP
+pip install -e .
 ```
 
 ## Usage example
@@ -68,13 +74,13 @@ Output file format will similar the above output.
 You can use the below commands to train model:
 
 ```sh
-python3 train_jointmodel_3task.py --save_dir path_save_model --train_file_dep path_to_dep_training_file --eval_file_dep path_to_dep_validation_file --train_file_pos path_to_pos_training_file --eval_file_pos path_to_pos_validation_file --train_file_ner path_to_ner_training_file --eval_file_ner path_to_ner_validation_file
+python3 train_phonlp.py --save_dir model_folder_path --train_file_dep path_to_dep_training_file --eval_file_dep path_to_dep_validation_file --train_file_pos path_to_pos_training_file --eval_file_pos path_to_pos_validation_file --train_file_ner path_to_ner_training_file --eval_file_ner path_to_ner_validation_file
 ```
 
 And testing model:
 
 ```sh
-python3 train_jointmodel_3task.py --save_dir path_save_model --mode predict --eval_file_dep path_to_dep_test_file --eval_file_pos path_to_pos_test_file --eval_file_ner path_to_ner_test_file
+python3 train_phonlp.py --save_dir model_folder_path --mode predict --eval_file_dep path_to_dep_test_file --eval_file_pos path_to_pos_test_file --eval_file_ner path_to_ner_test_file
 ```
 Data format for dependency parsing task follows by CoNLL-U format. You can see at https://universaldependencies.org/format.html .
 
@@ -93,6 +99,13 @@ VinAI	Np
 
 .	CH
 ```
+
+You can also annotate corpus from raw text by using the command:
+
+```sh
+python3 train_phonlp.py --save_dir model_folder_path --mode annotate --input_file path_to_input_file --output_file path_to_output_file
+```
+
 
 ## License
 

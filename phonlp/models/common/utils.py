@@ -8,7 +8,7 @@ import json
 import unicodedata
 import torch
 
-import phonlp.models.common.seq2seq_constant as constant
+import models.common.seq2seq_constant as constant
 import phonlp.utils.conll18_ud_eval as ud_eval
 
 # training schedule

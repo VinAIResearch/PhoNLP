@@ -5,7 +5,7 @@ Different loss functions.
 import torch
 import torch.nn as nn
 
-import PhoToolkit.models.common.seq2seq_constant as constant
+import phonlp.models.common.seq2seq_constant as constant
 
 def SequenceLoss(vocab_size):
     weight = torch.ones(vocab_size)

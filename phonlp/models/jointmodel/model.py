@@ -23,9 +23,8 @@ class JointModel(BertPreTrainedModel):
         # input layers
         self.input_size = 0
 
-        if self.args['use_phobert']:
-            self.phobert = AutoModel.from_pretrained(args['phobert_model'], config=self.config)
-            self.input_size += self.config.to_dict()["hidden_size"]
+        self.phobert = AutoModel.from_pretrained(args['pretrained_lm'], config=self.config)
+        self.input_size += self.config.to_dict()["hidden_size"]
 
         self.drop_replacement_ner = nn.Parameter(torch.randn(self.input_size + self.args['tag_emb_dim']) / np.sqrt(
             self.input_size + self.args['tag_emb_dim']))
@@ -42,17 +41,17 @@ class JointModel(BertPreTrainedModel):
         self.upos_clf.weight.data.zero_()
         self.upos_clf.bias.data.zero_()
 
-        self.dep_hid = nn.Linear(self.input_size, self.input_size)
+        self.dep_hid = nn.Linear(self.input_size + self.args['tag_emb_dim'], self.input_size + self.args['tag_emb_dim'])
 
         # classifiers
-        self.unlabeled = DeepBiaffineScorer(self.input_size, self.input_size, self.args['deep_biaff_hidden_dim'], 1, pairwise=True, dropout=args['dropout'])
-        self.deprel = DeepBiaffineScorer(self.input_size, self.input_size, self.args['deep_biaff_hidden_dim'], len(vocab['deprel']), pairwise=True, dropout=args['dropout'])
+        self.unlabeled = DeepBiaffineScorer(self.input_size + self.args['tag_emb_dim'], self.input_size + self.args['tag_emb_dim'], self.args['deep_biaff_hidden_dim'], 1, pairwise=True, dropout=args['dropout'])
+        self.deprel = DeepBiaffineScorer(self.input_size + self.args['tag_emb_dim'], self.input_size + self.args['tag_emb_dim'], self.args['deep_biaff_hidden_dim'], len(vocab['deprel']), pairwise=True, dropout=args['dropout'])
         if args['linearization']:
-            self.linearization = DeepBiaffineScorer(self.input_size, self.input_size, self.args['deep_biaff_hidden_dim'], 1, pairwise=True, dropout=args['dropout'])
+            self.linearization = DeepBiaffineScorer(self.input_size + self.args['tag_emb_dim'], self.input_size + self.args['tag_emb_dim'], self.args['deep_biaff_hidden_dim'], 1, pairwise=True, dropout=args['dropout'])
         if args['distance']:
-            self.distance = DeepBiaffineScorer(self.input_size, self.input_size, self.args['deep_biaff_hidden_dim'], 1, pairwise=True, dropout=args['dropout'])
+            self.distance = DeepBiaffineScorer(self.input_size + self.args['tag_emb_dim'], self.input_size + self.args['tag_emb_dim'], self.args['deep_biaff_hidden_dim'], 1, pairwise=True, dropout=args['dropout'])
 
-        self.ner_tag_clf = nn.Linear(self.input_size, len(self.vocab['ner_tag']))
+        self.ner_tag_clf = nn.Linear(self.input_size + self.args['tag_emb_dim'], len(self.vocab['ner_tag']))
         self.ner_tag_clf.bias.data.zero_()
         # criterion
         self.crit_ner = CRFLoss(len(self.vocab['ner_tag']))
@@ -74,14 +73,13 @@ class JointModel(BertPreTrainedModel):
         def pack(x):
             return pack_padded_sequence(x, sentlens, batch_first=True)
         inputs = []
-        if self.args['use_phobert']:
-            phobert_emb = self.phobert(tokens_phobert)[2][-1]
-            phobert_emb = torch.cat([torch.index_select(phobert_emb[i], 0, first_subword[i]).unsqueeze(0) for i in
+        phobert_emb = self.phobert(tokens_phobert)[2][-1]
+        phobert_emb = torch.cat([torch.index_select(phobert_emb[i], 0, first_subword[i]).unsqueeze(0) for i in
                                      range(phobert_emb.size(0))], dim=0)
-            if torch.cuda.is_available():
-                phobert_emb = phobert_emb.cuda()
-            phobert_emb = pack(phobert_emb)
-            inputs += [phobert_emb]
+        if torch.cuda.is_available():
+            phobert_emb = phobert_emb.cuda()
+        phobert_emb = pack(phobert_emb)
+        inputs += [phobert_emb]
 
         def pad(x):
             return pad_packed_sequence(PackedSequence(x, phobert_emb.batch_sizes), batch_first=True)[0]
@@ -110,14 +108,14 @@ class JointModel(BertPreTrainedModel):
         def pad(x):
             return pad_packed_sequence(PackedSequence(x, phobert_emb.batch_sizes), batch_first=True)[0]
 
-        # upos_embed_matrix_dup = self.upos_emb_matrix_ner.repeat(pos_dis.size(0), 1, 1)
-        # pos_emb = torch.matmul(pos_dis, upos_embed_matrix_dup)
-        # pos_emb = pack(pos_emb)
-        # inputs += [pos_emb]
-        #
-        # inputs = torch.cat([x.data for x in inputs], 1)
-        # inputs = self.worddrop_ner(inputs, self.drop_replacement_ner)
-        ner_pred = self.ner_tag_clf(inputs[0].data)
+        upos_embed_matrix_dup = self.upos_emb_matrix_ner.repeat(pos_dis.size(0), 1, 1)
+        pos_emb = torch.matmul(pos_dis, upos_embed_matrix_dup)
+        pos_emb = pack(pos_emb)
+        inputs += [pos_emb]
+
+        inputs = torch.cat([x.data for x in inputs], 1)
+        inputs = self.worddrop_ner(inputs, self.drop_replacement_ner)
+        ner_pred = self.ner_tag_clf(inputs)
 
         logits = pad(F.relu(ner_pred)).contiguous()
         loss, trans = self.crit_ner(logits, word_mask, tags)
@@ -132,15 +130,15 @@ class JointModel(BertPreTrainedModel):
         def pad(x):
             return pad_packed_sequence(PackedSequence(x, phobert_emb.batch_sizes), batch_first=True)[0]
 
-        # upos_embed_matrix_dup = self.upos_emb_matrix_dep.repeat(pos_dis.size(0), 1, 1)
-        # pos_emb = torch.matmul(pos_dis, upos_embed_matrix_dup)
-        # pos_emb = pack(pos_emb)
-        # inputs += [pos_emb]
-        #
-        # inputs = torch.cat([x.data for x in inputs], 1)
-        # inputs = self.worddrop_dep(inputs, self.drop_replacement_dep)
+        upos_embed_matrix_dup = self.upos_emb_matrix_dep.repeat(pos_dis.size(0), 1, 1)
+        pos_emb = torch.matmul(pos_dis, upos_embed_matrix_dup)
+        pos_emb = pack(pos_emb)
+        inputs += [pos_emb]
 
-        hidden_out = self.dep_hid(inputs[0].data)
+        inputs = torch.cat([x.data for x in inputs], 1)
+        inputs = self.worddrop_dep(inputs, self.drop_replacement_dep)
+
+        hidden_out = self.dep_hid(inputs)
         hidden_out = pad(hidden_out)
 
         unlabeled_scores = self.unlabeled(self.drop_dep(hidden_out), self.drop_dep(hidden_out)).squeeze(3)

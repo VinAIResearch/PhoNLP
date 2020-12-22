@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Training and evaluation for joint model.
+Training, evaluation and annotate for joint model.
 """
 
 import sys
@@ -11,14 +11,16 @@ from models.common.doc import *
 from utils.conll import CoNLL
 from models.common import utils as util
 from models.ner import scorer as score_ner
+from models.ner.vocab import MultiVocab
 from models.pos import scorer as score_pos
 from models.depparse import scorer as score_dep
-from models.jointmodel3task.trainer import JointTrainer
-from models.jointmodel3task.data import DataLoaderDep, DataLoaderPOS, BuildVocab, DataLoaderNER
+from models.jointmodel.trainer import JointTrainer
+from models.jointmodel.data import DataLoaderDep, DataLoaderPOS, BuildVocab, DataLoaderNER
 import argparse
 import numpy as np
 import random
 import torch
+from annotate_model import JointModel
 
 
 def parse_args():
@@ -28,7 +30,7 @@ def parse_args():
 
     parser.add_argument('--eval_file_dep', type=str,
                         default="/home/ubuntu/linhnt140/data/VnDTv1.1_predictedPOS/VnDTv1.1-dev.conll", help='Input file for data loader.')
-    parser.add_argument('--output_file_dep', type=str, default="./jointmodel3task/dep.out", help='Output CoNLL-U file.')
+    parser.add_argument('--output_file_dep', type=str, default="./jointmodel/dep.out", help='Output CoNLL-U file.')
 
     # POS
     parser.add_argument('--train_file_pos', type=str,
@@ -45,8 +47,15 @@ def parse_args():
     parser.add_argument('--eval_file_ner', type=str,
                         default="/home/ubuntu/linhnt140/data/NER_data/dev.txt",
                         help='Input file for data loader.')
+    # Anotate corpus
+    parser.add_argument('--input_file', type=str,
+                        default="/home/ubuntu/linhnt140/data/annotate/input.txt",
+                        help='Input file for annotate corpus.')
+    parser.add_argument('--output_file', type=str,
+                        default="/home/ubuntu/linhnt140/data/annotate/output.txt",
+                        help='Output file for annotate corpus.')
 
-    parser.add_argument('--mode', default='train', choices=['train', 'predict'])
+    parser.add_argument('--mode', default='train', choices=['train', 'eval', 'annotate'])
     parser.add_argument('--deep_biaff_hidden_dim', type=int, default=400)
     parser.add_argument('--tag_emb_dim', type=int, default=100)
     parser.add_argument('--word_dropout', type=float, default=0.33)
@@ -64,15 +73,14 @@ def parse_args():
     parser.add_argument('--eval_interval', type=int, default=200)
     parser.add_argument('--batch_size', type=int, default=32)
     parser.add_argument('--accumulation_steps', type=int, default=1)
-    parser.add_argument('--save_dir', type=str, default='saved_models_newversion/jointmodel',
+    parser.add_argument('--save_dir', type=str, default='saved_models/jointmodel',
                         help='Root dir for saving models.')
 
     parser.add_argument('--seed', type=int, default=1234)
     parser.add_argument('--cuda', type=bool, default=torch.cuda.is_available())
     parser.add_argument('--cpu', action='store_true', help='Ignore CUDA.')
-    # phobert
-    parser.add_argument('--use_phobert', type=bool, default=True)
-    parser.add_argument('--phobert_model', type=str, default='vinai/phobert-base')
+    # bert
+    parser.add_argument('--pretrained_lm', type=str, default='vinai/phobert-base')
     parser.add_argument('--max_sequence_length', type=int, default=256)
     args = parser.parse_args()
     return args
@@ -94,17 +102,18 @@ def main():
 
     if args['mode'] == 'train':
         train(args)
-    else:
+    elif args['mode'] == 'eval':
         evaluate(args)
-
+    else:
+        annotate(input_file=args['input_file'], output_file= args['output_file'], args = args)
 
 def train(args):
     util.ensure_dir(args['save_dir'])
-    model_file = args['save_dir'] + '/' + 'jointmodel.pt'
+    model_file = args['save_dir'] + '/' + 'phonlp.pt'
 
 
-    tokenizer = AutoTokenizer.from_pretrained(args['phobert_model'], use_fast=False)
-    config_phobert = AutoConfig.from_pretrained(args['phobert_model'], output_hidden_states=True)
+    tokenizer = AutoTokenizer.from_pretrained(args['pretrained_lm'], use_fast=False)
+    config_phobert = AutoConfig.from_pretrained(args['pretrained_lm'], output_hidden_states=True)
 
     print("Loading data with batch size {}...".format(args['batch_size']))
     train_doc_dep = Document(CoNLL.conll2dict(input_file=args['train_file_dep']))
@@ -117,8 +126,6 @@ def train(args):
     train_batch_ner = DataLoaderNER(args['train_file_ner'], args['batch_size'], args, vocab=vocab,
                                     evaluation=False, tokenizer=tokenizer, max_seq_length=args['max_sequence_length'])
 
-    print("VOCAB SIZE POS IN POS DATASET: ", list(vocab['upos']))
-    print("VOCAB SIZE NER IN NER DATASET: ", list(vocab['ner_tag']))
 
     dev_doc_dep = Document(CoNLL.conll2dict(input_file=args['eval_file_dep']))
 
@@ -323,10 +330,10 @@ def evaluate(args):
     # file paths
     system_pred_file = args['output_file_dep']
     gold_file = args['eval_file_dep']
-    model_file = args['save_dir'] + '/' + 'jointmodel.pt'
+    model_file = args['save_dir'] + '/' + 'phonlp.pt'
 
-    config_phobert = AutoConfig.from_pretrained(args["phobert_model"], output_hidden_states=True)
-    tokenizer = AutoTokenizer.from_pretrained(args["phobert_model"])
+    config_phobert = AutoConfig.from_pretrained(args["pretrained_lm"], output_hidden_states=True)
+    tokenizer = AutoTokenizer.from_pretrained(args["pretrained_lm"], use_fast=False)
 
     # load model
     print("Loading model from: {}".format(model_file))
@@ -378,6 +385,27 @@ def evaluate(args):
     print("Test score:")
     print("{} {:.2f} {:.2f} {:.2f} {:.2f} {:.2f} {:.2f}".format(
         'Test result', las*100, uas * 100, accuracy_pos * 100, p * 100, r * 100, f1 * 100))
+
+
+def annotate(input_file=None, output_file=None, args=None):
+    tokenizer = AutoTokenizer.from_pretrained(args['pretrained_lm'], use_fast=False)
+    config_phobert = AutoConfig.from_pretrained(args['pretrained_lm'], output_hidden_states=True)
+    model_file = args['save_dir'] + '/' + 'phonlp.pt'
+    print("Loading model from: {}".format(model_file))
+    checkpoint = torch.load(model_file, lambda storage, loc: storage)
+    args = checkpoint['config']
+    vocab = MultiVocab.load_state_dict(checkpoint['vocab'])
+    # load model
+    model = JointModel(args, vocab, config_phobert, tokenizer)
+    model.load_state_dict(checkpoint['model'], strict=False)
+    if torch.cuda.is_available() == False:
+        model.to(torch.device('cpu'))
+    else:
+        model.to(torch.device('cuda'))
+    model.eval()
+    model.annotate(input_file=input_file, output_file=output_file)
+
+
 
 
 if __name__ == '__main__':

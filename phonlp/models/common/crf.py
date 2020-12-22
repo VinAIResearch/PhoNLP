@@ -7,7 +7,6 @@ from numbers import Number
 import numpy as np
 import torch
 from torch import nn
-import torch.nn.init as init
 
 class CRFLoss(nn.Module):
     """

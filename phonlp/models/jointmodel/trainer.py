@@ -8,7 +8,7 @@ import torch
 from models.common.trainer import Trainer as BaseTrainer
 from models.common import utils as util
 from models.common.chuliu_edmonds import chuliu_edmonds_one_root
-from models.jointmodel3task.model import *
+from models.jointmodel.model import *
 from models.ner.vocab import MultiVocab
 from models.common.crf import viterbi_decode
 
