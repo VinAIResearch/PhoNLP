@@ -30,20 +30,15 @@ pip install -e .
 
 ```python
 import phonlp
-# Download phonlp model
-phonlp.download(save_dir='./')
-
-# Load model
-model = phonlp.load(save_dir='./')
-
-# Input text must be already word-segmented!
-line = "Tôi đang làm_việc tại VinAI ."
-
-# Annotate sentence
-model.print_out(model.annotate(text=line)
-
-# Annotate corpus 
+# Download the pre-trained PhoNLP model
+# and save it in a local machine folder
+phonlp.download(save_dir='./phonlp')
+# Load the pre-trained PhoNLP model
+model = phonlp.load(save_dir='./phonlp')
+# Annotate a corpus
 model.annotate(input_file='input.txt', output_file='output.txt')
+# Annotate a sentence
+model.print_out(model.annotate(text="Tôi đang làm_việc tại VinAI ."))
 ```
 This command will print out the results for input sentence follow by Universal Dependencies parse of that sentence. The output should look like:
 ```sh
