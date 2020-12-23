@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import torch
-from phonlp.model_eval import JointModel
+from phonlp.annotate_model import JointModel
 from phonlp.models.ner.vocab import MultiVocab
 from transformers import AutoConfig, AutoTokenizer
 import gdown
