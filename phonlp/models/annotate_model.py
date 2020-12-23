@@ -247,7 +247,7 @@ class JointModel(BertPreTrainedModel):
             f = open(output_file, 'w')
             for i in range(len(data)):
                 for j in range(len(data[i])):
-                    if output_type == 'conll-u':
+                    if output_type == 'conll':
                         f.write(str(j + 1) + '\t' + data[i][j] + '\t' + '_' + '\t' + '_' + '\t' + test_preds_pos[i][j][
                                 0] + '\t' + '_' + '\t' + test_preds_dep[i][j][0] + '\t' + test_preds_dep[i][j][
                                         1] + '\t' + '_' + '\t' +
@@ -262,7 +262,7 @@ class JointModel(BertPreTrainedModel):
         data, test_preds_pos, test_preds_ner, test_preds_dep = output
         for i in range(len(data)):
             for j in range(len(data[i])):
-                if output_type == 'conll-u':
+                if output_type == 'conll':
                     print(str(j + 1) + '\t' + data[i][j] + '\t' + '_' + '\t' + '_' + '\t' + test_preds_pos[i][j][
                         0] + '\t' + '_' + '\t' + test_preds_dep[i][j][0] + '\t' + test_preds_dep[i][j][
                                 1] + '\t' + '_' + '\t' +

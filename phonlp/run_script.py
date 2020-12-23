@@ -1,19 +1,20 @@
 # -*- coding: utf-8 -*-
 import torch
-from phonlp.models.annotate_model import JointModel
+from phonlp.model_eval import JointModel
 from phonlp.models.ner.vocab import MultiVocab
 from transformers import AutoConfig, AutoTokenizer
 import gdown
 
 
-def download(save_dir, url="https://drive.google.com/uc?id=1ZFfyppGc4QKdeGve1kvpj44GTlM9Rl-H"):
+
+def download(save_dir, url="https://drive.google.com/uc?id=1ix2Yse5SnTIWSnANluCHemdYmZtkUQN6"):
     gdown.download(url, save_dir)
 
 def load(save_dir='./'):
     if save_dir[len(save_dir) - 1] == '/':
-        model_file = save_dir + "VnDTv1.1_jointmodel.pt"
+        model_file = save_dir + "phonlp.pt"
     else:
-        model_file = save_dir + "VnDTv1.1_jointmodel.pt"
+        model_file = save_dir + "/phonlp.pt"
     tokenizer = AutoTokenizer.from_pretrained('vinai/phobert-base', use_fast=False)
     config_phobert = AutoConfig.from_pretrained('vinai/phobert-base', output_hidden_states=True)
     print("Loading model from: {}".format(model_file))
