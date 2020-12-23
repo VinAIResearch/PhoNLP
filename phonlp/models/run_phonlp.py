@@ -98,7 +98,6 @@ def main():
         torch.cuda.manual_seed(args.seed)
 
     args = vars(args)
-    print("Running parser in {} mode".format(args['mode']))
 
     if args['mode'] == 'train':
         train(args)

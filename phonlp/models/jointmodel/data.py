@@ -26,7 +26,10 @@ class DataLoaderPOS:
         self.vocab = vocab
 
         data = self.preprocess(data, self.vocab, tokenizer, max_seq_length)
-        print("NUMBER OF EXAMPLE IN POS DATASET: ", len(data))
+        if evaluation == True:
+            print("Number of evaluation sentences for POS tagging: ", len(data))
+        else:
+            print("Number of training sentences for POS tagging: ", len(data))
         # shuffle for training
         if self.shuffled:
             random.shuffle(data)
@@ -34,7 +37,6 @@ class DataLoaderPOS:
 
         # chunk into batches
         self.data = self.chunk_batches(data)
-        print("{} batches created.".format(len(self.data)))
 
     def preprocess(self, data, vocab, tokenizer, max_seq_length):
         pad_id = 1
@@ -144,14 +146,16 @@ class DataLoaderDep:
         self.vocab = vocab
 
         data_dep = self.preprocess(data_dep, self.vocab, tokenizer, max_seq_length)
-        print("NUMBER OF EXAMPLE IN DEP DATASET: ", len(data_dep))
+        if evaluation == True:
+            print("Number of evaluation sentences for dependency parsing: ", len(data_dep))
+        else:
+            print("Number of training sentences for dependency parsing: ", len(data_dep))
 
         # shuffle for training
         if self.shuffled:
             random.shuffle(data_dep)
         # chunk into batches
         self.data_dep = self.chunk_batches(data_dep)
-        print("{} dep batches created.".format(len(self.data_dep)))
 
 
     def preprocess(self, data_dep, vocab, tokenizer, max_seq_length):
@@ -282,6 +286,10 @@ class DataLoaderNER:
         self.vocab = vocab
 
         data = self.preprocess(data, self.vocab, args, tokenizer, max_seq_length)
+        if evaluation == True:
+            print("Number of evaluation sentences for NER: ", len(data))
+        else:
+            print("Number of training sentences for NER: ", len(data))
         # shuffle for training
         if self.shuffled:
             random.shuffle(data)
@@ -289,7 +297,6 @@ class DataLoaderNER:
 
         # chunk into batches
         self.data = self.chunk_batches(data)
-        logger.debug("{} batches created.".format(len(self.data)))
 
     def preprocess(self, data, vocab, args, tokenizer, max_seq_length):
         processed = []
