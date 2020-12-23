@@ -21,7 +21,7 @@ setup(
     name='phonlp',
     version=version,
     description='PhoNLP: A joint multi-task learning model for Vietnamese part-of-speech tagging, named entity recognition and dependency parsing',
-    long_description=open('README.md').read(),
+    long_description='',
     author='Linh The Nguyen and Dat Quoc Nguyen',
     author_email='v.linhnt140@vinai.io',
     maintainer='linhnt',

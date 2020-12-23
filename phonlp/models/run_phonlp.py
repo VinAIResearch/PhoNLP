@@ -20,7 +20,7 @@ import argparse
 import numpy as np
 import random
 import torch
-from annotate_model import JointModel
+from phonlp.annotate_model import JointModel
 
 
 def parse_args():
