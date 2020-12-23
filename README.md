@@ -61,7 +61,7 @@ Input file includes word segmented text and follows by the below format:
 ```
 Output file format will similar the above output.
 
-Additionally, you can also obtain the output following by CoNLL-U format. To obtain the CoNLL-U format output, you just need add parameter `output_type='conll-u'` in model.annotate() function. Also, depending on your computer's memory, you can also set parameter `batch_size=batch_size` you want when you annotate corpus to increase the speed of annotation.
+Additionally, you can also obtain the output following by CoNLL format. To obtain the CoNLL format output, you just need add parameter `output_type='conll'` in model.annotate() function. Also, depending on your computer's memory, you can also set parameter `batch_size=batch_size` you want when you annotate corpus to increase the speed of annotation.
 
 [comment]: <> (_For more examples and usage, please refer to the [Wiki][wiki]._)
 
@@ -80,7 +80,7 @@ And testing model:
 ```sh
 python3 run_phonlp.py --save_dir model_folder_path --mode predict --eval_file_dep path_to_dep_test_file --eval_file_pos path_to_pos_test_file --eval_file_ner path_to_ner_test_file
 ```
-Data format for dependency parsing task follows by CoNLL-U format. You can see at https://universaldependencies.org/format.html .
+Data format for dependency parsing task follows by CoNLL format.
 
 Data format for NER and POS follow by the below format :
 
