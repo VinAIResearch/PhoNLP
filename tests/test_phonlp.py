@@ -7,8 +7,8 @@ def test_phonlp():
     model = phonlp.load("./")
     out = model.annotate(text)
     model.print_out(out)
-    model.annotate(input_file='/home/vinai/Documents/NLPToolKit_package/phonlp/input.txt',
-                   output_file='/home/vinai/Documents/NLPToolKit_package/phonlp/output.txt')
+    model.annotate(input_file='./speedtest.txt',
+                   output_file='./output.txt')
 
 
 if __name__ == '__main__':
