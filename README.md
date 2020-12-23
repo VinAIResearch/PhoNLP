@@ -67,18 +67,22 @@ Additionally, you can also obtain the output following by CoNLL format. To obtai
 
 ## Training and Evaluating Model
 
-You can use the below commands to train model:
-
+You can use the below commands to install enviroments:
 ```sh
 git clone https://github.com/VinAIResearch/PhoNLP
-cd PhoNLP/phonlp/models
+cd PhoNLP
+pip install -r requirements.txt
+```
+To training model:
+```sh
+cd phonlp/models
 python3 run_phonlp.py --save_dir model_folder_path --train_file_dep path_to_dep_training_file --eval_file_dep path_to_dep_validation_file --train_file_pos path_to_pos_training_file --eval_file_pos path_to_pos_validation_file --train_file_ner path_to_ner_training_file --eval_file_ner path_to_ner_validation_file
 ```
 
 And testing model:
 
 ```sh
-python3 run_phonlp.py --save_dir model_folder_path --mode predict --eval_file_dep path_to_dep_test_file --eval_file_pos path_to_pos_test_file --eval_file_ner path_to_ner_test_file
+python3 run_phonlp.py --save_dir model_folder_path --mode eval --eval_file_dep path_to_dep_test_file --eval_file_pos path_to_pos_test_file --eval_file_ner path_to_ner_test_file
 ```
 Data format for dependency parsing task follows by CoNLL format.
 
