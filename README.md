@@ -70,6 +70,8 @@ Additionally, you can also obtain the output following by CoNLL-U format. To obt
 You can use the below commands to train model:
 
 ```sh
+git clone https://github.com/VinAIResearch/PhoNLP
+cd PhoNLP/phonlp/models
 python3 run_phonlp.py --save_dir model_folder_path --train_file_dep path_to_dep_training_file --eval_file_dep path_to_dep_validation_file --train_file_pos path_to_pos_training_file --eval_file_pos path_to_pos_validation_file --train_file_ner path_to_ner_training_file --eval_file_ner path_to_ner_validation_file
 ```
 
