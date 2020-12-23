@@ -4,6 +4,7 @@ Training, evaluation and annotate for joint model.
 """
 
 import sys
+sys.path.append('../../')
 sys.path.append('../')
 from tqdm import tqdm
 from transformers import *
@@ -21,7 +22,6 @@ import numpy as np
 import random
 import torch
 from phonlp.annotate_model import JointModel
-
 
 def parse_args():
     parser = argparse.ArgumentParser()
