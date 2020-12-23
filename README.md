@@ -81,7 +81,7 @@ python3 run_phonlp.py --save_dir model_folder_path --train_file_dep path_to_dep_
 
 And testing model:
 
-```sh
+```
 python3 run_phonlp.py --save_dir model_folder_path --mode eval --eval_file_dep path_to_dep_test_file --eval_file_pos path_to_pos_test_file --eval_file_ner path_to_ner_test_file
 ```
 Data format for dependency parsing task follows by CoNLL format.
