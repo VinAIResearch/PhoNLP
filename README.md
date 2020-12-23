@@ -14,7 +14,7 @@
 
 ## Installation
 
-PhoNLP supports Python 3.6 or later. You can install PhoNLP via pipby using the command line: 
+PhoNLP supports Python 3.6 or later. You can install PhoNLP via pip by using the command line: 
 ```sh
 pip install phonlp
 ```
