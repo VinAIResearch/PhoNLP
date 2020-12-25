@@ -106,10 +106,10 @@ def main():
     else:
         annotate(input_file=args['input_file'], output_file= args['output_file'], args = args)
 
+
 def train(args):
     util.ensure_dir(args['save_dir'])
     model_file = args['save_dir'] + '/' + 'phonlp.pt'
-
 
     tokenizer = AutoTokenizer.from_pretrained(args['pretrained_lm'], use_fast=False)
     config_phobert = AutoConfig.from_pretrained(args['pretrained_lm'], output_hidden_states=True)
@@ -380,9 +380,8 @@ def evaluate(args):
         test_preds_ner += preds_ner
     p, r, f1 = score_ner.score_by_entity(test_preds_ner, test_batch_ner.tags)
 
-    print("Test score:")
-    print("{} {:.2f} {:.2f} {:.2f} {:.2f} {:.2f} {:.2f}".format(
-        'Test result', las*100, uas * 100, accuracy_pos * 100, p * 100, r * 100, f1 * 100))
+    print("{} POS tagging: {:.2f}, NER: {:.2f}, Dependency parsing: {:.2f}/{:.2f}".format(
+        'Evaluation results: ', accuracy_pos*100, f1 * 100, las*100, uas*100))
 
 
 def annotate(input_file=None, output_file=None, args=None):
