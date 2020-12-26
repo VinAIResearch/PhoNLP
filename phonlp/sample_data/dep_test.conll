@@ -1,0 +1,658 @@
+1	Cảnh_báo	_	_	_	_	0	root	_	_
+2	!	_	_	_	_	1	punct	_	_
+
+1	"	_	_	_	_	2	punct	_	_
+2	Không	_	_	_	_	0	root	_	_
+3	!	_	_	_	_	2	punct	_	_
+
+1	Nhận	_	_	_	_	0	root	_	_
+2	vợ	_	_	_	_	1	dob	_	_
+3	.	_	_	_	_	1	punct	_	_
+
+1	Gặp	_	_	_	_	0	root	_	_
+2	thường	_	_	_	_	1	vmod	_	_
+3	.	_	_	_	_	1	punct	_	_
+
+1	Còn	_	_	_	_	2	dep	_	_
+2	người	_	_	_	_	0	root	_	_
+3	?	_	_	_	_	2	punct	_	_
+
+1	Họ	_	_	_	_	2	sub	_	_
+2	sợ	_	_	_	_	0	root	_	_
+3	.	_	_	_	_	2	punct	_	_
+
+1	Oxy	_	_	_	_	0	root	_	_
+2	99_,_9%	_	_	_	_	1	nmod	_	_
+3	.	_	_	_	_	1	punct	_	_
+
+1	Đất	_	_	_	_	2	sub	_	_
+2	hồi_sinh	_	_	_	_	0	root	_	_
+3	.	_	_	_	_	2	punct	_	_
+
+1	Và	_	_	_	_	2	dep	_	_
+2	ngày	_	_	_	_	0	root	_	_
+3	về	_	_	_	_	2	nmod	_	_
+4	.	_	_	_	_	2	punct	_	_
+
+1	Phía	_	_	_	_	0	root	_	_
+2	sau	_	_	_	_	1	nmod	_	_
+3	chuẩn_mực	_	_	_	_	1	nmod	_	_
+4	.	_	_	_	_	1	punct	_	_
+
+1	Lan	_	_	_	_	3	sub	_	_
+2	đang	_	_	_	_	3	amod	_	_
+3	bế_tắc	_	_	_	_	0	root	_	_
+4	.	_	_	_	_	3	punct	_	_
+
+1	Thanh	_	_	_	_	2	sub	_	_
+2	bám	_	_	_	_	0	root	_	_
+3	sát	_	_	_	_	2	vmod	_	_
+4	.	_	_	_	_	2	punct	_	_
+
+1	Tiệc	_	_	_	_	0	root	_	_
+2	tráng	_	_	_	_	1	nmod	_	_
+3	chảo	_	_	_	_	2	dob	_	_
+4	.	_	_	_	_	1	punct	_	_
+
+1	cô	_	_	_	_	0	root	_	_
+2	bán	_	_	_	_	1	nmod	_	_
+3	hàng	_	_	_	_	2	vmod	_	_
+4	.	_	_	_	_	1	punct	_	_
+
+1	Con	_	_	_	_	0	root	_	_
+2	đường	_	_	_	_	1	nmod	_	_
+3	ư	_	_	_	_	1	nmod	_	_
+4	?	_	_	_	_	1	punct	_	_
+
+1	Một	_	_	_	_	2	det	_	_
+2	tháng	_	_	_	_	0	root	_	_
+3	ròng	_	_	_	_	2	nmod	_	_
+4	...	_	_	_	_	2	punct	_	_
+
+1	Bệnh_tật	_	_	_	_	0	root	_	_
+2	,	_	_	_	_	1	punct	_	_
+3	xơ_xác	_	_	_	_	1	amod	_	_
+4	.	_	_	_	_	1	punct	_	_
+
+1	Đây	_	_	_	_	2	sub	_	_
+2	là	_	_	_	_	0	root	_	_
+3	Phan_Rang	_	_	_	_	2	vmod	_	_
+4	.	_	_	_	_	2	punct	_	_
+
+1	Hẻm	_	_	_	_	2	sub	_	_
+2	thành	_	_	_	_	0	root	_	_
+3	sông	_	_	_	_	2	dob	_	_
+4	.	_	_	_	_	2	punct	_	_
+
+1	Xà_xẻo	_	_	_	_	0	root	_	_
+2	đất	_	_	_	_	1	dob	_	_
+3	rừng	_	_	_	_	2	nmod	_	_
+4	.	_	_	_	_	1	punct	_	_
+
+1	Không	_	_	_	_	2	dep	_	_
+2	sao	_	_	_	_	0	root	_	_
+3	đâu	_	_	_	_	2	dep	_	_
+4	.	_	_	_	_	2	punct	_	_
+
+1	Vậy	_	_	_	_	2	sub	_	_
+2	được	_	_	_	_	0	root	_	_
+3	sao	_	_	_	_	2	vmod	_	_
+4	?	_	_	_	_	2	punct	_	_
+
+1	Có	_	_	_	_	0	root	_	_
+2	tật	_	_	_	_	1	dob	_	_
+3	giật_mình	_	_	_	_	1	vmod	_	_
+4	.	_	_	_	_	1	punct	_	_
+
+1	Kịch_bản	_	_	_	_	0	root	_	_
+2	cho	_	_	_	_	1	nmod	_	_
+3	sự	_	_	_	_	2	pob	_	_
+4	trở_về	_	_	_	_	3	nmod	_	_
+5	.	_	_	_	_	1	punct	_	_
+
+1	"	_	_	_	_	3	punct	_	_
+2	Tôi	_	_	_	_	3	sub	_	_
+3	thấy	_	_	_	_	0	root	_	_
+4	đau_lòng	_	_	_	_	3	vmod	_	_
+5	.	_	_	_	_	3	punct	_	_
+
+1	Ba	_	_	_	_	2	det	_	_
+2	phương_án	_	_	_	_	3	sub	_	_
+3	được	_	_	_	_	0	root	_	_
+4	hình_thành	_	_	_	_	3	vmod	_	_
+5	.	_	_	_	_	3	punct	_	_
+
+1	Mất	_	_	_	_	0	root	_	_
+2	uy_tín	_	_	_	_	1	dob	_	_
+3	với	_	_	_	_	2	nmod	_	_
+4	đồng_bọn	_	_	_	_	3	pob	_	_
+5	...	_	_	_	_	1	punct	_	_
+
+1	Bố_mẹ	_	_	_	_	3	sub	_	_
+2	cùng	_	_	_	_	3	adv	_	_
+3	mất	_	_	_	_	0	root	_	_
+4	sớm	_	_	_	_	3	vmod	_	_
+5	.	_	_	_	_	3	punct	_	_
+
+1	Thời_gian	_	_	_	_	0	root	_	_
+2	đàm_thoại	_	_	_	_	1	nmod	_	_
+3	4	_	_	_	_	4	det	_	_
+4	giây	_	_	_	_	1	prd	_	_
+5	.	_	_	_	_	1	punct	_	_
+
+1	Một	_	_	_	_	2	det	_	_
+2	đêm	_	_	_	_	0	root	_	_
+3	ở	_	_	_	_	2	loc	_	_
+4	Mour	_	_	_	_	3	pob	_	_
+5	.	_	_	_	_	2	punct	_	_
+
+1	Mất_mát	_	_	_	_	3	sub	_	_
+2	không	_	_	_	_	3	adv	_	_
+3	đong	_	_	_	_	0	root	_	_
+4	đếm	_	_	_	_	3	vmod	_	_
+5	.	_	_	_	_	3	punct	_	_
+
+1	Đi	_	_	_	_	0	root	_	_
+2	từ	_	_	_	_	1	vmod	_	_
+3	khó	_	_	_	_	2	pob	_	_
+4	nghèo	_	_	_	_	3	nmod	_	_
+5	...	_	_	_	_	1	punct	_	_
+
+1	Riêng	_	_	_	_	4	dep	_	_
+2	khỉ	_	_	_	_	4	sub	_	_
+3	thì	_	_	_	_	4	dep	_	_
+4	loạn	_	_	_	_	0	root	_	_
+5	.	_	_	_	_	4	punct	_	_
+
+1	Và	_	_	_	_	4	dep	_	_
+2	miền	_	_	_	_	4	sub	_	_
+3	Nam	_	_	_	_	2	nmod	_	_
+4	gọi	_	_	_	_	0	root	_	_
+5	.	_	_	_	_	4	punct	_	_
+
+1	Chúng_tôi	_	_	_	_	2	sub	_	_
+2	quyết_định	_	_	_	_	0	root	_	_
+3	thủ_tiêu	_	_	_	_	2	vmod	_	_
+4	hàng_hoá	_	_	_	_	3	dob	_	_
+5	.	_	_	_	_	2	punct	_	_
+
+1	Đáy	_	_	_	_	3	sub	_	_
+2	sông	_	_	_	_	1	nmod	_	_
+3	tối	_	_	_	_	0	root	_	_
+4	mù_mịt	_	_	_	_	3	amod	_	_
+5	.	_	_	_	_	3	punct	_	_
+
+1	VKSND	_	_	_	_	4	sub	_	_
+2	tỉnh	_	_	_	_	1	nmod	_	_
+3	Bến_Tre	_	_	_	_	2	nmod	_	_
+4	kháng_nghị	_	_	_	_	0	root	_	_
+5	.	_	_	_	_	4	punct	_	_
+
+1	Bà	_	_	_	_	0	root	_	_
+2	chủ	_	_	_	_	1	nmod	_	_
+3	ở	_	_	_	_	1	loc	_	_
+4	Linh_Sơn	_	_	_	_	3	pob	_	_
+5	.	_	_	_	_	1	punct	_	_
+
+1	Họ	_	_	_	_	2	sub	_	_
+2	bắt_đầu	_	_	_	_	0	root	_	_
+3	say_mê	_	_	_	_	2	vmod	_	_
+4	công_việc	_	_	_	_	3	vmod	_	_
+5	.	_	_	_	_	2	punct	_	_
+
+1	Rồi	_	_	_	_	4	dep	_	_
+2	Đảng	_	_	_	_	4	sub	_	_
+3	sẽ	_	_	_	_	4	adv	_	_
+4	thấy	_	_	_	_	0	root	_	_
+5	.	_	_	_	_	4	punct	_	_
+
+1	Vì_thế	_	_	_	_	4	dep	_	_
+2	nó	_	_	_	_	4	sub	_	_
+3	mới	_	_	_	_	4	adv	_	_
+4	tức_giận	_	_	_	_	0	root	_	_
+5	.	_	_	_	_	4	punct	_	_
+
+1	Tiếng	_	_	_	_	3	sub	_	_
+2	còi	_	_	_	_	1	nmod	_	_
+3	hụ	_	_	_	_	0	root	_	_
+4	liên_hồi	_	_	_	_	3	vmod	_	_
+5	.	_	_	_	_	3	punct	_	_
+
+1	Ngẫm	_	_	_	_	0	root	_	_
+2	sao	_	_	_	_	1	vmod	_	_
+3	mà	_	_	_	_	1	coord	_	_
+4	thương	_	_	_	_	3	conj	_	_
+5	thế	_	_	_	_	1	vmod	_	_
+6	!	_	_	_	_	1	punct	_	_
+
+1	Giải_quyết	_	_	_	_	0	root	_	_
+2	cái	_	_	_	_	1	dob	_	_
+3	gốc	_	_	_	_	2	nmod	_	_
+4	này	_	_	_	_	2	det	_	_
+5	như_thế_nào	_	_	_	_	1	adv	_	_
+6	?	_	_	_	_	1	punct	_	_
+
+1	Thời_điểm	_	_	_	_	3	sub	_	_
+2	gọi	_	_	_	_	1	nmod	_	_
+3	nằm	_	_	_	_	0	root	_	_
+4	ngoài	_	_	_	_	3	tmp	_	_
+5	giờ_hành_chính	_	_	_	_	4	pob	_	_
+6	.	_	_	_	_	3	punct	_	_
+
+1	Nghe	_	_	_	_	0	root	_	_
+2	vậy	_	_	_	_	1	vmod	_	_
+3	Thư	_	_	_	_	1	sub	_	_
+4	lập_tức	_	_	_	_	5	adv	_	_
+5	có_mặt	_	_	_	_	1	vmod	_	_
+6	.	_	_	_	_	1	punct	_	_
+
+1	Lối_thoát	_	_	_	_	0	root	_	_
+2	cho	_	_	_	_	1	nmod	_	_
+3	cả	_	_	_	_	5	nmod	_	_
+4	ba	_	_	_	_	5	det	_	_
+5	bên	_	_	_	_	2	pob	_	_
+6	.	_	_	_	_	1	punct	_	_
+
+1	Tùng	_	_	_	_	3	sub	_	_
+2	thật_sự	_	_	_	_	3	adv	_	_
+3	tự_tin	_	_	_	_	0	root	_	_
+4	và	_	_	_	_	3	coord	_	_
+5	phấn_khích	_	_	_	_	4	conj	_	_
+6	.	_	_	_	_	3	punct	_	_
+
+1	Cuộc_đời	_	_	_	_	0	root	_	_
+2	dưới	_	_	_	_	1	loc	_	_
+3	vành	_	_	_	_	2	pob	_	_
+4	mũ	_	_	_	_	3	nmod	_	_
+5	thám_tử	_	_	_	_	3	nmod	_	_
+6	.	_	_	_	_	1	punct	_	_
+
+1	Kết_quả	_	_	_	_	2	sub	_	_
+2	là	_	_	_	_	0	root	_	_
+3	Kim	_	_	_	_	2	vmod	_	_
+4	không	_	_	_	_	5	adv	_	_
+5	biết	_	_	_	_	3	nmod	_	_
+6	.	_	_	_	_	2	punct	_	_
+
+1	Nhiều	_	_	_	_	2	nmod	_	_
+2	tổn_thất	_	_	_	_	4	sub	_	_
+3	đã	_	_	_	_	4	adv	_	_
+4	xảy	_	_	_	_	0	root	_	_
+5	ra	_	_	_	_	4	adv	_	_
+6	.	_	_	_	_	4	punct	_	_
+
+1	Cả	_	_	_	_	2	nmod	_	_
+2	vườn	_	_	_	_	4	sub	_	_
+3	thú	_	_	_	_	2	nmod	_	_
+4	buồn	_	_	_	_	0	root	_	_
+5	thương	_	_	_	_	4	vmod	_	_
+6	.	_	_	_	_	4	punct	_	_
+
+1	Thế_là	_	_	_	_	4	dep	_	_
+2	ông	_	_	_	_	4	sub	_	_
+3	Khuyên	_	_	_	_	2	nmod	_	_
+4	trở_thành	_	_	_	_	0	root	_	_
+5	liệt_sĩ	_	_	_	_	4	dob	_	_
+6	.	_	_	_	_	4	punct	_	_
+
+1	"	_	_	_	_	2	punct	_	_
+2	Nhà	_	_	_	_	0	root	_	_
+3	chế_tạo	_	_	_	_	2	nmod	_	_
+4	"	_	_	_	_	2	punct	_	_
+5	nông_dân	_	_	_	_	2	nmod	_	_
+6	.	_	_	_	_	2	punct	_	_
+
+1	Xóm	_	_	_	_	0	root	_	_
+2	"	_	_	_	_	3	punct	_	_
+3	đập	_	_	_	_	1	nmod	_	_
+4	bao	_	_	_	_	3	vmod	_	_
+5	"	_	_	_	_	3	punct	_	_
+6	.	_	_	_	_	1	punct	_	_
+
+1	Cặp	_	_	_	_	2	nmod	_	_
+2	mắt	_	_	_	_	3	sub	_	_
+3	tinh_anh	_	_	_	_	0	root	_	_
+4	và	_	_	_	_	3	coord	_	_
+5	trầm_tĩnh	_	_	_	_	4	conj	_	_
+6	.	_	_	_	_	3	punct	_	_
+
+1	Đón	_	_	_	_	0	root	_	_
+2	tại	_	_	_	_	1	loc	_	_
+3	Hố_Chuối	_	_	_	_	2	pob	_	_
+4	chân	_	_	_	_	2	pob	_	_
+5	đèo	_	_	_	_	4	nmod	_	_
+6	.	_	_	_	_	1	punct	_	_
+
+1	Rạch_Gốc	_	_	_	_	2	sub	_	_
+2	là	_	_	_	_	0	root	_	_
+3	đất	_	_	_	_	2	vmod	_	_
+4	có_thể	_	_	_	_	5	adv	_	_
+5	nương_náu	_	_	_	_	3	nmod	_	_
+6	.	_	_	_	_	2	punct	_	_
+
+1	Cách_mạng	_	_	_	_	5	sub	_	_
+2	miền	_	_	_	_	1	nmod	_	_
+3	Nam	_	_	_	_	1	nmod	_	_
+4	còn	_	_	_	_	5	amod	_	_
+5	dài	_	_	_	_	0	root	_	_
+6	.	_	_	_	_	5	punct	_	_
+
+1	Rồi	_	_	_	_	4	dep	_	_
+2	chúng_tôi	_	_	_	_	4	sub	_	_
+3	lại	_	_	_	_	4	adv	_	_
+4	ra	_	_	_	_	0	root	_	_
+5	đi	_	_	_	_	4	vmod	_	_
+6	.	_	_	_	_	4	punct	_	_
+
+1	Hành_trình	_	_	_	_	0	root	_	_
+2	"	_	_	_	_	1	punct	_	_
+3	đổi	_	_	_	_	1	nmod	_	_
+4	chó	_	_	_	_	3	dob	_	_
+5	"	_	_	_	_	1	punct	_	_
+6	.	_	_	_	_	1	punct	_	_
+
+1	Tiến_sĩ	_	_	_	_	0	root	_	_
+2	ngành	_	_	_	_	1	nmod	_	_
+3	năng_lượng	_	_	_	_	2	nmod	_	_
+4	vật_liệu	_	_	_	_	3	nmod	_	_
+5	Nguyễn_Thanh_Mỹ	_	_	_	_	1	nmod	_	_
+6	.	_	_	_	_	1	punct	_	_
+
+1	Tôi	_	_	_	_	3	sub	_	_
+2	chỉ	_	_	_	_	3	adv	_	_
+3	muốn	_	_	_	_	0	root	_	_
+4	về	_	_	_	_	3	dir	_	_
+5	VN	_	_	_	_	4	loc	_	_
+6	.	_	_	_	_	3	punct	_	_
+
+1	Kiếm	_	_	_	_	0	root	_	_
+2	sống	_	_	_	_	1	vmod	_	_
+3	dưới	_	_	_	_	1	loc	_	_
+4	đáy	_	_	_	_	3	pob	_	_
+5	sông	_	_	_	_	4	nmod	_	_
+6	.	_	_	_	_	1	punct	_	_
+
+1	Cuộc	_	_	_	_	0	root	_	_
+2	thi	_	_	_	_	1	nmod	_	_
+3	Ký_sự	_	_	_	_	1	nmod	_	_
+4	nhân_vật	_	_	_	_	3	nmod	_	_
+5	2005	_	_	_	_	3	tmp	_	_
+6	.	_	_	_	_	1	punct	_	_
+
+1	Hàng	_	_	_	_	0	root	_	_
+2	rong	_	_	_	_	1	nmod	_	_
+3	thời	_	_	_	_	1	nmod	_	_
+4	tiền	_	_	_	_	5	nmod	_	_
+5	SEA_GAMES	_	_	_	_	3	nmod	_	_
+6	.	_	_	_	_	1	punct	_	_
+
+1	May_mắn	_	_	_	_	0	root	_	_
+2	là	_	_	_	_	1	amod	_	_
+3	không	_	_	_	_	4	nmod	_	_
+4	ai	_	_	_	_	5	sub	_	_
+5	bị_thương	_	_	_	_	1	prd	_	_
+6	.	_	_	_	_	1	punct	_	_
+
+1	Bài_toán	_	_	_	_	0	root	_	_
+2	khó	_	_	_	_	1	nmod	_	_
+3	của	_	_	_	_	1	nmod	_	_
+4	nguồn	_	_	_	_	3	pob	_	_
+5	nhân_lực	_	_	_	_	4	nmod	_	_
+6	.	_	_	_	_	1	punct	_	_
+
+1	Lãi_ròng	_	_	_	_	2	sub	_	_
+2	là	_	_	_	_	0	root	_	_
+3	những	_	_	_	_	4	det	_	_
+4	niềm	_	_	_	_	2	vmod	_	_
+5	vui	_	_	_	_	4	nmod	_	_
+6	.	_	_	_	_	2	punct	_	_
+
+1	Tất_cả	_	_	_	_	0	root	_	_
+2	chỉ	_	_	_	_	3	dep	_	_
+3	với	_	_	_	_	1	nmod	_	_
+4	hai	_	_	_	_	5	det	_	_
+5	cùi_tay	_	_	_	_	3	pob	_	_
+6	cụt	_	_	_	_	5	nmod	_	_
+7	.	_	_	_	_	1	punct	_	_
+
+1	Trại	_	_	_	_	0	root	_	_
+2	Kem_Kjang	_	_	_	_	1	nmod	_	_
+3	...	_	_	_	_	1	punct	_	_
+4	864	_	_	_	_	5	det	_	_
+5	giờ	_	_	_	_	1	tmp	_	_
+6	khắc_khoải	_	_	_	_	5	nmod	_	_
+7	.	_	_	_	_	1	punct	_	_
+
+1	Vậy	_	_	_	_	3	dep	_	_
+2	có	_	_	_	_	3	adv	_	_
+3	cho	_	_	_	_	0	root	_	_
+4	em	_	_	_	_	3	dob	_	_
+5	lên	_	_	_	_	3	iob	_	_
+6	không	_	_	_	_	3	adv	_	_
+7	?	_	_	_	_	3	punct	_	_
+
+1	Cứ	_	_	_	_	2	nmod	_	_
+2	thế	_	_	_	_	4	mnr	_	_
+3	đã	_	_	_	_	4	amod	_	_
+4	gần	_	_	_	_	0	root	_	_
+5	20	_	_	_	_	6	det	_	_
+6	năm	_	_	_	_	4	amod	_	_
+7	.	_	_	_	_	4	punct	_	_
+
+1	Kinh_nghiệm	_	_	_	_	2	sub	_	_
+2	dạy	_	_	_	_	0	root	_	_
+3	Nhi	_	_	_	_	2	dob	_	_
+4	:	_	_	_	_	3	punct	_	_
+5	hãy	_	_	_	_	6	adv	_	_
+6	im_lặng	_	_	_	_	3	nmod	_	_
+7	.	_	_	_	_	2	punct	_	_
+
+1	Chị	_	_	_	_	6	sub	_	_
+2	ấy	_	_	_	_	1	det	_	_
+3	rất	_	_	_	_	4	amod	_	_
+4	độ_lượng	_	_	_	_	6	prd	_	_
+5	và	_	_	_	_	6	dep	_	_
+6	thông_cảm	_	_	_	_	0	root	_	_
+7	.	_	_	_	_	6	punct	_	_
+
+1	Hôm	_	_	_	_	5	tmp	_	_
+2	đó	_	_	_	_	1	det	_	_
+3	Tùng	_	_	_	_	5	sub	_	_
+4	không	_	_	_	_	5	adv	_	_
+5	đi	_	_	_	_	0	root	_	_
+6	chơi	_	_	_	_	5	vmod	_	_
+7	.	_	_	_	_	5	punct	_	_
+
+1	Còn	_	_	_	_	2	dep	_	_
+2	quãng	_	_	_	_	0	root	_	_
+3	thời_gian	_	_	_	_	2	nmod	_	_
+4	Hùng	_	_	_	_	5	sub	_	_
+5	ở	_	_	_	_	2	nmod	_	_
+6	Đức	_	_	_	_	5	loc	_	_
+7	?	_	_	_	_	2	punct	_	_
+
+1	Cường	_	_	_	_	2	sub	_	_
+2	dặn	_	_	_	_	0	root	_	_
+3	Thọ	_	_	_	_	2	dob	_	_
+4	nên	_	_	_	_	2	iob	_	_
+5	tiếp_tục	_	_	_	_	4	vmod	_	_
+6	theo_dõi	_	_	_	_	5	vmod	_	_
+7	.	_	_	_	_	2	punct	_	_
+
+1	Hùng	_	_	_	_	4	sub	_	_
+2	sẽ	_	_	_	_	4	adv	_	_
+3	lại	_	_	_	_	4	adv	_	_
+4	phải	_	_	_	_	0	root	_	_
+5	thử	_	_	_	_	4	vmod	_	_
+6	Kim	_	_	_	_	5	dob	_	_
+7	.	_	_	_	_	4	punct	_	_
+
+1	"	_	_	_	_	2	punct	_	_
+2	Nhận_dạng	_	_	_	_	0	root	_	_
+3	nó	_	_	_	_	2	dob	_	_
+4	ra_sao	_	_	_	_	2	adv	_	_
+5	?	_	_	_	_	2	punct	_	_
+6	"	_	_	_	_	2	punct	_	_
+7	.	_	_	_	_	2	punct	_	_
+
+1	Tự_thân	_	_	_	_	3	sub	_	_
+2	đã	_	_	_	_	3	adv	_	_
+3	nói	_	_	_	_	0	root	_	_
+4	lên	_	_	_	_	3	adv	_	_
+5	nhiều	_	_	_	_	6	nmod	_	_
+6	điều	_	_	_	_	3	dob	_	_
+7	.	_	_	_	_	3	punct	_	_
+
+1	"	_	_	_	_	2	punct	_	_
+2	Hai_Lúa	_	_	_	_	4	sub	_	_
+3	"	_	_	_	_	2	punct	_	_
+4	mở	_	_	_	_	0	root	_	_
+5	...	_	_	_	_	4	punct	_	_
+6	phòng_thí_nghiệm	_	_	_	_	4	dob	_	_
+7	.	_	_	_	_	4	punct	_	_
+
+1	Dankia	_	_	_	_	3	sub	_	_
+2	vẫn	_	_	_	_	3	amod	_	_
+3	lặng_lẽ	_	_	_	_	0	root	_	_
+4	"	_	_	_	_	3	punct	_	_
+5	nhỡ_nhàng	_	_	_	_	3	amod	_	_
+6	"	_	_	_	_	3	punct	_	_
+7	...	_	_	_	_	3	punct	_	_
+
+1	Thắng	_	_	_	_	0	root	_	_
+2	độ	_	_	_	_	1	dob	_	_
+3	...	_	_	_	_	2	punct	_	_
+4	123	_	_	_	_	5	det	_	_
+5	tháng	_	_	_	_	2	nmod	_	_
+6	lương	_	_	_	_	5	nmod	_	_
+7	!	_	_	_	_	1	punct	_	_
+
+1	Nhưng	_	_	_	_	2	dep	_	_
+2	gặp	_	_	_	_	0	root	_	_
+3	rắn	_	_	_	_	2	dob	_	_
+4	thì	_	_	_	_	2	coord	_	_
+5	bắt	_	_	_	_	4	conj	_	_
+6	rắn	_	_	_	_	5	dob	_	_
+7	.	_	_	_	_	2	punct	_	_
+
+1	Tuyệt_đối	_	_	_	_	4	vmod	_	_
+2	không	_	_	_	_	4	adv	_	_
+3	còn	_	_	_	_	4	adv	_	_
+4	tìm	_	_	_	_	0	root	_	_
+5	thấy	_	_	_	_	4	vmod	_	_
+6	gì	_	_	_	_	4	vmod	_	_
+7	.	_	_	_	_	4	punct	_	_
+
+1	Lúa	_	_	_	_	0	root	_	_
+2	-	_	_	_	_	1	punct	_	_
+3	tràm	_	_	_	_	1	nmod	_	_
+4	trên	_	_	_	_	1	loc	_	_
+5	đất	_	_	_	_	4	pob	_	_
+6	phèn	_	_	_	_	5	nmod	_	_
+7	.	_	_	_	_	1	punct	_	_
+
+1	Ai	_	_	_	_	2	sub	_	_
+2	kêu	_	_	_	_	0	root	_	_
+3	,	_	_	_	_	2	punct	_	_
+4	có	_	_	_	_	2	dep	_	_
+5	tôi	_	_	_	_	4	dob	_	_
+6	ngay	_	_	_	_	4	vmod	_	_
+7	!	_	_	_	_	2	punct	_	_
+
+1	Kỳ	_	_	_	_	0	root	_	_
+2	1	_	_	_	_	1	det	_	_
+3	:	_	_	_	_	1	punct	_	_
+4	Xác_minh	_	_	_	_	1	nmod	_	_
+5	một	_	_	_	_	6	det	_	_
+6	truyền_thuyết	_	_	_	_	4	dob	_	_
+7	.	_	_	_	_	1	punct	_	_
+
+1	Những	_	_	_	_	2	det	_	_
+2	người	_	_	_	_	5	sub	_	_
+3	bạn	_	_	_	_	2	nmod	_	_
+4	đồng_hành	_	_	_	_	2	nmod	_	_
+5	đáng	_	_	_	_	0	root	_	_
+6	yêu	_	_	_	_	5	vmod	_	_
+7	.	_	_	_	_	5	punct	_	_
+
+1	Giàu_có	_	_	_	_	3	sub	_	_
+2	thì	_	_	_	_	3	dep	_	_
+3	biết	_	_	_	_	0	root	_	_
+4	thế_nào	_	_	_	_	3	vmod	_	_
+5	cho	_	_	_	_	4	nmod	_	_
+6	đủ	_	_	_	_	5	dep	_	_
+7	.	_	_	_	_	3	punct	_	_
+
+1	luật	_	_	_	_	3	sub	_	_
+2	Muay_Thái	_	_	_	_	1	nmod	_	_
+3	nghiêm_cấm	_	_	_	_	0	root	_	_
+4	sự	_	_	_	_	3	dob	_	_
+5	chênh_lệch	_	_	_	_	4	nmod	_	_
+6	này	_	_	_	_	4	det	_	_
+7	.	_	_	_	_	3	punct	_	_
+
+1	Tôi	_	_	_	_	2	sub	_	_
+2	nhìn	_	_	_	_	0	root	_	_
+3	anh	_	_	_	_	2	dob	_	_
+4	Xuân	_	_	_	_	3	nmod	_	_
+5	như	_	_	_	_	2	coord	_	_
+6	dò_hỏi	_	_	_	_	5	conj	_	_
+7	.	_	_	_	_	2	punct	_	_
+
+1	Lên	_	_	_	_	0	root	_	_
+2	đến	_	_	_	_	1	vmod	_	_
+3	nơi	_	_	_	_	2	pob	_	_
+4	quần_áo	_	_	_	_	1	sub	_	_
+5	rách	_	_	_	_	1	prd	_	_
+6	tả_tơi	_	_	_	_	5	amod	_	_
+7	.	_	_	_	_	1	punct	_	_
+
+1	Bán	_	_	_	_	0	root	_	_
+2	báo	_	_	_	_	1	vmod	_	_
+3	rong	_	_	_	_	2	nmod	_	_
+4	:	_	_	_	_	1	punct	_	_
+5	chấp_nhận	_	_	_	_	1	vmod	_	_
+6	rủi_ro	_	_	_	_	5	vmod	_	_
+7	.	_	_	_	_	1	punct	_	_
+
+1	Có	_	_	_	_	0	root	_	_
+2	một	_	_	_	_	3	det	_	_
+3	người	_	_	_	_	1	vmod	_	_
+4	con_gái	_	_	_	_	3	nmod	_	_
+5	tuổi	_	_	_	_	3	nmod	_	_
+6	20	_	_	_	_	5	det	_	_
+7	.	_	_	_	_	1	punct	_	_
+
+1	Nhưng	_	_	_	_	3	dep	_	_
+2	nó	_	_	_	_	3	sub	_	_
+3	là	_	_	_	_	0	root	_	_
+4	một	_	_	_	_	5	det	_	_
+5	người	_	_	_	_	3	dob	_	_
+6	lính	_	_	_	_	5	nmod	_	_
+7	.	_	_	_	_	3	punct	_	_
+
+1	Rồi	_	_	_	_	3	dep	_	_
+2	được	_	_	_	_	3	adv	_	_
+3	đi	_	_	_	_	0	root	_	_
+4	Hà_Nội	_	_	_	_	3	dob	_	_
+5	,	_	_	_	_	4	punct	_	_
+6	Đà_Nẵng	_	_	_	_	4	nmod	_	_
+7	...	_	_	_	_	3	punct	_	_
+
+1	Trong	_	_	_	_	3	loc	_	_
+2	phích	_	_	_	_	1	pob	_	_
+3	có	_	_	_	_	0	root	_	_
+4	nước	_	_	_	_	3	dob	_	_
+5	sôi	_	_	_	_	4	nmod	_	_
+6	đấy	_	_	_	_	3	det	_	_
+7	.	_	_	_	_	3	punct	_	_
+
+1	Túng	_	_	_	_	4	adv	_	_
+2	quá	_	_	_	_	1	amod	_	_
+3	,	_	_	_	_	4	punct	_	_
+4	rủ	_	_	_	_	0	root	_	_
+5	nhau	_	_	_	_	4	vmod	_	_
+6	đi	_	_	_	_	4	prp	_	_
+7	buôn_lậu	_	_	_	_	6	vmod	_	_
+8	.	_	_	_	_	4	punct	_	_
+
