@@ -338,7 +338,7 @@ def evaluate(args):
     use_cuda = args['cuda'] and not args['cpu']
     trainer = JointTrainer(model_file=model_file, use_cuda=use_cuda, config_phobert=config_phobert)
     loaded_args, vocab = trainer.args, trainer.vocab
-    print(loaded_args)
+
     # load data
     print("Loading data with batch size {}...".format(args['batch_size']))
 
