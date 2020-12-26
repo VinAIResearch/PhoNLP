@@ -37,6 +37,8 @@ python3 run_phonlp.py --mode train --save_dir <model_folder_path> \
 	--train_file_dep <path_to_training_file_dep> --eval_file_dep <path_to_validation_file_dep>
 ```
 
+`--lambda_pos`, `--lambda_ner` and  `--lambda_dep` represent mixture weights associated with POS tagging, NER and dependency parsing losses, respectively, and `lambda_pos + lambda_ner + lambda_dep = 1`.
+
 Example:
 
 ```
