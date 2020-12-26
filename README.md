@@ -1,113 +1,116 @@
 # PhoNLP: A joint multi-task learning model for Vietnamese part-of-speech tagging, named entity recognition and dependency parsing
 
-[comment]: <> (> Short blurb about what your product does.)
-
-[comment]: <> ([![NPM Version][npm-image]][npm-url])
-
-[comment]: <> ([![Build Status][travis-image]][travis-url])
-
-[comment]: <> ([![Downloads Stats][npm-downloads]][npm-url])
-
-[comment]: <> (One to two paragraph statement about your product and what it does.)
-
-![](header.png)
+PhoNLP is the first multi-task learning model for joint Vietnamese part-of-speech (POS) tagging, named entity recognition (NER) and dependency parsing. Experiments on Vietnamese benchmark datasets show that PhoNLP produces state-of-the-art results, outperforming a single-task learning approach that  fine-tunes the pre-trained Vietnamese language model [PhoBERT](https://github.com/VinAIResearch/PhoBERT) for each task independently.
 
 ## Installation
 
-PhoNLP supports Python 3.6 or later. You can install PhoNLP via pip by using the command line: 
-```sh
-pip install phonlp
-```
-You can also install from source by using the below command lines:
+- Python version >= 3.6; PyTorch version >= 1.4.0
+- PhoNLP can be installed using `pip` as follows: `pip3 install phonlp`
+- Or PhoNLP can also be installed from source with the following commands: 
+	```
+	git clone https://github.com/VinAIResearch/PhoNLP
+	cd PhoNLP
+	pip3 install -e .
+	```
 
-```sh
+## Usage example: Command lines
+
+To play with the examples using command lines, please install `phonlp` from the source:	
+```
 git clone https://github.com/VinAIResearch/PhoNLP
 cd PhoNLP
-pip install -e .
+pip3 install -e . 
 ```
 
-## Usage example
+Although we specify PhoNLP for Vietnamese, the following command scripts in fact can directly work for other languages that have gold annotated corpora available for the three tasks of POS tagging, NER and dependency parsing, and a pre-trained BERT-based language model available from [transformers](https://huggingface.co/models).
+
+### Training
+
+```
+cd phonlp/models
+python3 run_phonlp.py --mode train --save_dir <model_folder_path> \
+	--pretrained_lm <transformers_pretrained_model> \
+	--lr <float_value> --batch_size <int_value> --num_epoch <int_value>\
+	--lambda_pos <float_value> --lambda_ner <float_value> --lambda_dep <float_value> \
+	--train_file_pos <path_to_training_file_pos> --eval_file_pos <path_to_validation_file_pos> \
+	--train_file_ner <path_to_training_file_ner> --eval_file_ner <path_to_validation_file_ner> \
+	--train_file_dep <path_to_training_file_dep> --eval_file_dep <path_to_validation_file_dep>
+```
+
+Example:
+
+```
+python3 run_phonlp.py --mode train --save_dir ./phonlp_tmp \
+	--pretrained_lm "vinai/phobert-base"
+	--lr 1e-5 --batch_size 32 --num_epoch 40 \
+	--lambda_pos 0.4 --lambda_ner 0.2 --lambda_dep 0.4 \
+	--train_file_pos ../sample_data/pos_train.txt --eval_file_pos ../sample_data/pos_valid.txt \
+	--train_file_ner ../sample_data/ner_train.txt --eval_file_ner ../sample_data/ner_valid.txt \
+	--train_file_dep ../sample_data/dep_train.txt --eval_file_dep ../sample_data/dep_valid.txt
+```
+
+### Evaluation
+
+```
+cd phonlp/models
+python3 run_phonlp.py --mode eval --save_dir <model_folder_path> \
+	--eval_file_pos <path_to_test_file_pos> \
+	--eval_file_ner <path_to_test_file_ner> \
+	--eval_file_dep <path_to_test_file_dep>
+```
+
+Example:
+
+```
+python3 run_phonlp.py --mode eval --save_dir ./phonlp_tmp \
+	--eval_file_pos ../sample_data/pos_test.txt \
+	--eval_file_ner ../sample_data/ner_test.txt \
+	--eval_file_dep ../sample_data/dep_test.txt
+```
+
+
+### Annotate a corpus
+
+```
+cd phonlp/models
+python3 run_phonlp.py --mode annotate --save_dir <model_folder_path> \
+	--input_file <path_to_input_file> --output_file <path_to_output_file> 
+```
+
+Example:
+
+```
+python3 run_phonlp.py --mode annotate --save_dir ./phonlp_tmp \
+	--input_file ../sample_data/input.txt --output_file ../sample_data/output.txt 
+```
+
+## Usage example: Python API
 
 ```python
 import phonlp
-# Download the pre-trained PhoNLP model
+# Download the pre-trained PhoNLP model 
 # and save it in a local machine folder
-phonlp.download(save_dir='./phonlp')
+phonlp.download(save_dir='./pretrained_phonlp')
 # Load the pre-trained PhoNLP model
-model = phonlp.load(save_dir='./phonlp')
-# Annotate a corpus
+model = phonlp.load(save_dir='./pretrained_phonlp')
+# Annotate a corpus where each line represents a word-segmented sentence
 model.annotate(input_file='input.txt', output_file='output.txt')
-# Annotate a sentence
+# Annotate a word-segmented sentence
 model.print_out(model.annotate(text="Tôi đang làm_việc tại VinAI ."))
 ```
-This command will print out the results for input sentence follow by Universal Dependencies parse of that sentence. The output should look like:
-```sh
-1	Tôi	P	O	3	sub	
 
+By default, the output for each input sentence is formatted with 6 columns representing word index, word form, POS tag, NER label, head index of the current word and its dependency relation type:
+
+```
+1	Tôi		P	O	3	sub	
 2	đang	R	O	3	adv
-
 3	làm_việc	V	O	0	root
-
-4	tại	E	O	3	loc
-
+4	tại		E	O	3	loc
 5	VinAI	Np 	B-ORG	4	prob
-
-6	.	CH	O	3	punct
-```
-Input file includes word segmented text and follows by the below format:
-```sh
-" Bệnh bệnh 623 " , nữ , 83 tuổi , trú ở phường Điện_Nam_Trung , thị_xã Điện_Bàn . 
-" Bệnh_nhân 1.000 " , tại Khánh_Hoà , nam , 33 tuổi , là chuyên_gia , quốc_tịch Philippines . 
-```
-Output file format will similar the above output.
-
-Additionally, you can also obtain the output following by CoNLL format. To obtain the CoNLL format output, you just need add parameter `output_type='conll'` in model.annotate() function. Also, depending on your computer's memory, you can also set parameter `batch_size=batch_size` you want when you annotate corpus to increase the speed of annotation.
-
-[comment]: <> (_For more examples and usage, please refer to the [Wiki][wiki]._)
-
-## Training and Evaluating Model
-
-You can use the below commands to install enviroments:
-```sh
-git clone https://github.com/VinAIResearch/PhoNLP
-cd PhoNLP
-pip install -r requirements.txt
-```
-To training model:
-```sh
-cd phonlp/models
-python3 run_phonlp.py --save_dir model_folder_path --train_file_dep path_to_dep_training_file --eval_file_dep path_to_dep_validation_file --train_file_pos path_to_pos_training_file --eval_file_pos path_to_pos_validation_file --train_file_ner path_to_ner_training_file --eval_file_ner path_to_ner_validation_file
+6	.		CH	O	3	punct
 ```
 
-And testing model:
-
-```
-python3 run_phonlp.py --save_dir model_folder_path --mode eval --eval_file_dep path_to_dep_test_file --eval_file_pos path_to_pos_test_file --eval_file_ner path_to_ner_test_file
-```
-Data format for dependency parsing task follows by CoNLL format.
-
-Data format for NER and POS follow by the below format :
-
-```sh
-Tôi	P
-
-đang	R
-
-làm_việc	V
-
-tại	E
-
-VinAI	Np
-
-.	CH
-```
-
-You can also annotate corpus from raw text by using the command:
-
-```sh
-python3 run_phonlp.py --save_dir model_folder_path --mode annotate --input_file path_to_input_file --output_file path_to_output_file
-```
-
+In addition, the output can be formatted following the 10-column CoNLL format where the last column is used to represent NER predictions. This can be done by adding `output_type='conll'` into the `model.annotate()` function. Also, in the `model.annotate()` function, the value of the parameter `batch_size` can be adjusted to fit your computer's memory instead of using the default one at 8  (`batch_size=8`). Here, a larger `batch_size` would lead to a faster performance speed.
 
 ## License
 
