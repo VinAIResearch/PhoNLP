@@ -48,7 +48,7 @@ python3 run_phonlp.py --mode train --save_dir ./phonlp_tmp \
 	--lambda_pos 0.4 --lambda_ner 0.2 --lambda_dep 0.4 \
 	--train_file_pos ../sample_data/pos_train.txt --eval_file_pos ../sample_data/pos_valid.txt \
 	--train_file_ner ../sample_data/ner_train.txt --eval_file_ner ../sample_data/ner_valid.txt \
-	--train_file_dep ../sample_data/dep_train.txt --eval_file_dep ../sample_data/dep_valid.txt
+	--train_file_dep ../sample_data/dep_train.conll --eval_file_dep ../sample_data/dep_valid.conll
 ```
 
 ### Evaluation
@@ -67,7 +67,7 @@ Example:
 python3 run_phonlp.py --mode eval --save_dir ./phonlp_tmp \
 	--eval_file_pos ../sample_data/pos_test.txt \
 	--eval_file_ner ../sample_data/ner_test.txt \
-	--eval_file_dep ../sample_data/dep_test.txt
+	--eval_file_dep ../sample_data/dep_test.conll
 ```
 
 
@@ -112,7 +112,7 @@ By default, the output for each input sentence is formatted with 6 columns repre
 6	.		CH	O	3	punct
 ```
 
-In addition, the output can be formatted following the 10-column CoNLL format where the last column is used to represent NER predictions. This can be done by adding `output_type='conll'` into the `model.annotate()` function. Also, in the `model.annotate()` function, the value of the parameter `batch_size` can be adjusted to fit your computer's memory instead of using the default one at 8  (`batch_size=8`). Here, a larger `batch_size` would lead to a faster performance speed.
+In addition, the output can be formatted following the 10-column CoNLL format where the last column is used to represent NER predictions. This can be done by adding `output_type='conll'` into the `model.annotate()` function. Also, in the `model.annotate()` function, the value of the parameter `batch_size` can be adjusted to fit your computer's memory instead of using the default one at 1  (`batch_size=1`). Here, a larger `batch_size` would lead to a faster performance speed.
 
 ## License
 
