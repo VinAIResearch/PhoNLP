@@ -8,7 +8,7 @@ import gdown
 
 
 def download(save_dir, url="https://drive.google.com/uc?id=1ix2Yse5SnTIWSnANluCHemdYmZtkUQN6"):
-    gdown.download(url, save_dir)
+    gdown.download(url, save_dir, quiet=False)
 
 def load(save_dir='./'):
     if save_dir[len(save_dir) - 1] == '/':
