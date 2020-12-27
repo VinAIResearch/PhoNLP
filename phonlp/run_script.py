@@ -8,7 +8,11 @@ import gdown
 
 
 def download(save_dir, url="https://drive.google.com/uc?id=1ix2Yse5SnTIWSnANluCHemdYmZtkUQN6"):
-    gdown.download(url, save_dir, quiet=False)
+    if save_dir[len(save_dir) - 1] == '/':
+        model_file = save_dir + "phonlp.pt"
+    else:
+        model_file = save_dir + "/phonlp.pt"
+    gdown.download(url, model_file)
 
 def load(save_dir='./'):
     if save_dir[len(save_dir) - 1] == '/':
