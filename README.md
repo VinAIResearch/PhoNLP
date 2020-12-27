@@ -30,7 +30,7 @@ Although we specify PhoNLP for Vietnamese, the following command scripts in fact
 cd phonlp/models
 python3 run_phonlp.py --mode train --save_dir <model_folder_path> \
 	--pretrained_lm <transformers_pretrained_model> \
-	--lr <float_value> --batch_size <int_value> --num_epoch <int_value>\
+	--lr <float_value> --batch_size <int_value> --num_epoch <int_value> \
 	--lambda_pos <float_value> --lambda_ner <float_value> --lambda_dep <float_value> \
 	--train_file_pos <path_to_training_file_pos> --eval_file_pos <path_to_validation_file_pos> \
 	--train_file_ner <path_to_training_file_ner> --eval_file_ner <path_to_validation_file_ner> \
@@ -43,7 +43,7 @@ Example:
 
 ```
 python3 run_phonlp.py --mode train --save_dir ./phonlp_tmp \
-	--pretrained_lm "vinai/phobert-base"
+	--pretrained_lm "vinai/phobert-base" \
 	--lr 1e-5 --batch_size 32 --num_epoch 40 \
 	--lambda_pos 0.4 --lambda_ner 0.2 --lambda_dep 0.4 \
 	--train_file_pos ../sample_data/pos_train.txt --eval_file_pos ../sample_data/pos_valid.txt \
