@@ -104,12 +104,12 @@ model.print_out(model.annotate(text="Tôi đang làm_việc tại VinAI ."))
 By default, the output for each input sentence is formatted with 6 columns representing word index, word form, POS tag, NER label, head index of the current word and its dependency relation type:
 
 ```
-1	Tôi		P	O	3	sub	
+1	Tôi	P	O	3	sub	
 2	đang	R	O	3	adv
 3	làm_việc	V	O	0	root
-4	tại		E	O	3	loc
+4	tại	E	O	3	loc
 5	VinAI	Np 	B-ORG	4	prob
-6	.		CH	O	3	punct
+6	.	CH	O	3	punct
 ```
 
 In addition, the output can be formatted following the 10-column CoNLL format where the last column is used to represent NER predictions. This can be done by adding `output_type='conll'` into the `model.annotate()` function. Also, in the `model.annotate()` function, the value of the parameter `batch_size` can be adjusted to fit your computer's memory instead of using the default one at 1  (`batch_size=1`). Here, a larger `batch_size` would lead to a faster performance speed.

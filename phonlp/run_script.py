@@ -2,12 +2,14 @@
 import torch
 from phonlp.annotate_model import JointModel
 from phonlp.models.ner.vocab import MultiVocab
+from phonlp.models.common import utils as util
 from transformers import AutoConfig, AutoTokenizer
 import gdown
 
 
 
 def download(save_dir, url="https://drive.google.com/uc?id=1ix2Yse5SnTIWSnANluCHemdYmZtkUQN6"):
+    util.ensure_dir(save_dir)
     if save_dir[len(save_dir) - 1] == '/':
         model_file = save_dir + "phonlp.pt"
     else:
