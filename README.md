@@ -42,6 +42,7 @@ python3 run_phonlp.py --mode train --save_dir <model_folder_path> \
 Example:
 
 ```
+cd phonlp/models
 python3 run_phonlp.py --mode train --save_dir ./phonlp_tmp \
 	--pretrained_lm "vinai/phobert-base" \
 	--lr 1e-5 --batch_size 32 --num_epoch 40 \
@@ -64,6 +65,7 @@ python3 run_phonlp.py --mode eval --save_dir <model_folder_path> \
 Example:
 
 ```
+cd phonlp/models
 python3 run_phonlp.py --mode eval --save_dir ./phonlp_tmp \
 	--eval_file_pos ../sample_data/pos_test.txt \
 	--eval_file_ner ../sample_data/ner_test.txt \
@@ -82,6 +84,7 @@ python3 run_phonlp.py --mode annotate --save_dir <model_folder_path> \
 Example:
 
 ```
+cd phonlp/models
 python3 run_phonlp.py --mode annotate --save_dir ./phonlp_tmp \
 	--input_file ../sample_data/input.txt --output_file ../sample_data/output.txt 
 ```
