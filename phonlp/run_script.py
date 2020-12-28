@@ -8,7 +8,7 @@ import gdown
 
 
 
-def download(save_dir, url="https://drive.google.com/uc?id=1ix2Yse5SnTIWSnANluCHemdYmZtkUQN6"):
+def download(save_dir, url="https://public.vinai.io/phonlp.pt"):
     util.ensure_dir(save_dir)
     if save_dir[len(save_dir) - 1] == '/':
         model_file = save_dir + "phonlp.pt"
