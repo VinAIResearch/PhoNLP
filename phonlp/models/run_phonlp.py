@@ -400,7 +400,7 @@ def annotate(input_file=None, output_file=None, args=None):
     else:
         model.to(torch.device('cuda'))
     model.eval()
-    model.annotate(input_file=input_file, output_file=output_file)
+    model.annotate(input_file=input_file, output_file=output_file, batch_size=args['batch_size'])
 
 
 

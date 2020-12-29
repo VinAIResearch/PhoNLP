@@ -57,9 +57,10 @@ python3 run_phonlp.py --mode train --save_dir ./phonlp_tmp \
 ```
 cd phonlp/models
 python3 run_phonlp.py --mode eval --save_dir <model_folder_path> \
+	--batch_size <int_value> \
 	--eval_file_pos <path_to_test_file_pos> \
 	--eval_file_ner <path_to_test_file_ner> \
-	--eval_file_dep <path_to_test_file_dep>
+	--eval_file_dep <path_to_test_file_dep> 
 ```
 
 Example:
@@ -67,9 +68,10 @@ Example:
 ```
 cd phonlp/models
 python3 run_phonlp.py --mode eval --save_dir ./phonlp_tmp \
+	--batch_size 8 \
 	--eval_file_pos ../sample_data/pos_test.txt \
 	--eval_file_ner ../sample_data/ner_test.txt \
-	--eval_file_dep ../sample_data/dep_test.conll
+	--eval_file_dep ../sample_data/dep_test.conll \
 ```
 
 
@@ -78,7 +80,9 @@ python3 run_phonlp.py --mode eval --save_dir ./phonlp_tmp \
 ```
 cd phonlp/models
 python3 run_phonlp.py --mode annotate --save_dir <model_folder_path> \
-	--input_file <path_to_input_file> --output_file <path_to_output_file> 
+	--batch_size <int_value> \
+	--input_file <path_to_input_file> \
+	--output_file <path_to_output_file> 
 ```
 
 Example:
@@ -86,7 +90,9 @@ Example:
 ```
 cd phonlp/models
 python3 run_phonlp.py --mode annotate --save_dir ./phonlp_tmp \
-	--input_file ../sample_data/input.txt --output_file ../sample_data/output.txt 
+	--batch_size 8 \
+	--input_file ../sample_data/input.txt \
+	--output_file ../sample_data/output.txt 
 ```
 
 ## Usage example: Python API
