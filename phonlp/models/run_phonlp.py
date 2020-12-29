@@ -104,7 +104,7 @@ def main():
     elif args['mode'] == 'eval':
         evaluate(args)
     else:
-        annotate(input_file=args['input_file'], output_file= args['output_file'], args = args)
+        annotate(input_file=args['input_file'], output_file= args['output_file'], args = args, batch_size=args['batch_size'])
 
 
 def train(args):
@@ -384,7 +384,7 @@ def evaluate(args):
         'Evaluation results: ', accuracy_pos*100, f1 * 100, las*100, uas*100))
 
 
-def annotate(input_file=None, output_file=None, args=None):
+def annotate(input_file=None, output_file=None, args=None, batch_size=1):
     tokenizer = AutoTokenizer.from_pretrained(args['pretrained_lm'], use_fast=False)
     config_phobert = AutoConfig.from_pretrained(args['pretrained_lm'], output_hidden_states=True)
     model_file = args['save_dir'] + '/' + 'phonlp.pt'
@@ -400,7 +400,7 @@ def annotate(input_file=None, output_file=None, args=None):
     else:
         model.to(torch.device('cuda'))
     model.eval()
-    model.annotate(input_file=input_file, output_file=output_file, batch_size=args['batch_size'])
+    model.annotate(input_file=input_file, output_file=output_file, batch_size=batch_size)
 
 
 
