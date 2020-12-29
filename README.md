@@ -71,7 +71,7 @@ python3 run_phonlp.py --mode eval --save_dir ./phonlp_tmp \
 	--batch_size 8 \
 	--eval_file_pos ../sample_data/pos_test.txt \
 	--eval_file_ner ../sample_data/ner_test.txt \
-	--eval_file_dep ../sample_data/dep_test.conll \
+	--eval_file_dep ../sample_data/dep_test.conll 
 ```
 
 
