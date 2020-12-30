@@ -330,14 +330,16 @@ def evaluate(args):
     gold_file = args['eval_file_dep']
     model_file = args['save_dir'] + '/' + 'phonlp.pt'
 
-    config_phobert = AutoConfig.from_pretrained(args["pretrained_lm"], output_hidden_states=True)
-    tokenizer = AutoTokenizer.from_pretrained(args["pretrained_lm"], use_fast=False)
+    checkpoint = torch.load(model_file, lambda storage, loc: storage)
+    loaded_args = checkpoint['config']
+    vocab = MultiVocab.load_state_dict(checkpoint['vocab'])
+    config_phobert = AutoConfig.from_pretrained(loaded_args["pretrained_lm"], output_hidden_states=True)
+    tokenizer = AutoTokenizer.from_pretrained(loaded_args["pretrained_lm"], use_fast=False)
 
     # load model
     print("Loading model from: {}".format(model_file))
     use_cuda = args['cuda'] and not args['cpu']
     trainer = JointTrainer(model_file=model_file, use_cuda=use_cuda, config_phobert=config_phobert)
-    loaded_args, vocab = trainer.args, trainer.vocab
 
     # load data
     print("Loading data with batch size {}...".format(args['batch_size']))
@@ -385,14 +387,14 @@ def evaluate(args):
 
 
 def annotate(input_file=None, output_file=None, args=None, batch_size=1):
-    tokenizer = AutoTokenizer.from_pretrained(args['pretrained_lm'], use_fast=False)
-    config_phobert = AutoConfig.from_pretrained(args['pretrained_lm'], output_hidden_states=True)
     model_file = args['save_dir'] + '/' + 'phonlp.pt'
     print("Loading model from: {}".format(model_file))
     checkpoint = torch.load(model_file, lambda storage, loc: storage)
     args = checkpoint['config']
     vocab = MultiVocab.load_state_dict(checkpoint['vocab'])
     # load model
+    tokenizer = AutoTokenizer.from_pretrained(args['pretrained_lm'], use_fast=False)
+    config_phobert = AutoConfig.from_pretrained(args['pretrained_lm'], output_hidden_states=True)
     model = JointModel(args, vocab, config_phobert, tokenizer)
     model.load_state_dict(checkpoint['model'], strict=False)
     if torch.cuda.is_available() == False:
