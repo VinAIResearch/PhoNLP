@@ -266,11 +266,11 @@ class JointModel(BertPreTrainedModel):
                     print(str(j + 1) + '\t' + data[i][j] + '\t' + '_' + '\t' + '_' + '\t' + test_preds_pos[i][j][
                         0] + '\t' + '_' + '\t' + test_preds_dep[i][j][0] + '\t' + test_preds_dep[i][j][
                                 1] + '\t' + '_' + '\t' +
-                            test_preds_ner[i][j] + '\n')
+                            test_preds_ner[i][j])
                 else:
                     print(str(j + 1) + '\t' + data[i][j] + '\t' + test_preds_pos[i][j][0] + '\t' +
                             test_preds_ner[i][j] + '\t' + test_preds_dep[i][j][0] + '\t' + test_preds_dep[i][j][
-                                1] + '\n')
+                                1])
 
     def process_data_tagger(self, batch_text):
         pad_id = 1
