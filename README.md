@@ -95,11 +95,14 @@ python3 run_phonlp.py --mode annotate --save_dir ./phonlp_tmp \
 	--output_file ../sample_data/output.txt 
 ```
 
+#### The pre-trained PhoNLP model for Vietnamese is available at [HERE](https://public.vinai.io/phonlp.pt)!
+
+
 ## Usage example: Python API
 
 ```python
 import phonlp
-# Download the pre-trained PhoNLP model 
+# Automatically download the pre-trained PhoNLP model 
 # and save it in a local machine folder
 phonlp.download(save_dir='./pretrained_phonlp')
 # Load the pre-trained PhoNLP model
