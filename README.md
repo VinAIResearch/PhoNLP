@@ -1,6 +1,20 @@
 # PhoNLP: A joint multi-task learning model for Vietnamese part-of-speech tagging, named entity recognition and dependency parsing
 
-PhoNLP is a multi-task learning model for joint part-of-speech (POS) tagging, named entity recognition (NER) and dependency parsing. Experiments on Vietnamese benchmark datasets show that PhoNLP produces state-of-the-art results, outperforming a single-task learning approach that  fine-tunes the pre-trained Vietnamese language model [PhoBERT](https://github.com/VinAIResearch/PhoBERT) for each task independently.
+PhoNLP is a multi-task learning model for joint part-of-speech (POS) tagging, named entity recognition (NER) and dependency parsing. Experiments on Vietnamese benchmark datasets show that PhoNLP produces state-of-the-art results, outperforming a single-task learning approach that fine-tunes the pre-trained Vietnamese language model [PhoBERT](https://github.com/VinAIResearch/PhoBERT) for each task independently.
+
+The general architecture and experimental results of PhoNLP can be found in our [following paper](http://arxiv.org/abs/2101.01476):
+
+    @article{PhoNLP,
+    title     = {{PhoNLP: A joint multi-task learning model for Vietnamese part-of-speech tagging, named entity recognition and dependency parsing}},
+    author    = {Linh The Nguyen and Dat Quoc Nguyen},
+    journal   = {arXiv preprint},
+    volume    = {arXiv:2101.01476},
+    year      = {2021}
+    }
+
+**Please CITE** our paper when PhoNLP is used to help produce published results or incorporated into other software.
+
+_Although we specify PhoNLP for Vietnamese, usage examples below in fact can directly work for other languages that have gold annotated corpora available for the three tasks of POS tagging, NER and dependency parsing, and a pre-trained BERT-based language model available from [transformers](https://huggingface.co/models)._
 
 ## Installation
 
@@ -21,8 +35,6 @@ git clone https://github.com/VinAIResearch/PhoNLP
 cd PhoNLP
 pip3 install -e . 
 ```
-
-Although we specify PhoNLP for Vietnamese, the following command scripts in fact can directly work for other languages that have gold annotated corpora available for the three tasks of POS tagging, NER and dependency parsing, and a pre-trained BERT-based language model available from [transformers](https://huggingface.co/models).
 
 ### Training
 
