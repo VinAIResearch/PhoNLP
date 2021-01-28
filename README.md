@@ -1,8 +1,17 @@
+<p align="center">	
+<img width="100" alt="logo" src="https://user-images.githubusercontent.com/2412555/106093264-85897700-6162-11eb-9777-e2068d4442f2.png">
+</p>
+
+
 # PhoNLP: A joint multi-task learning model for Vietnamese part-of-speech tagging, named entity recognition and dependency parsing
 
 PhoNLP is a multi-task learning model for joint part-of-speech (POS) tagging, named entity recognition (NER) and dependency parsing. Experiments on Vietnamese benchmark datasets show that PhoNLP produces state-of-the-art results, outperforming a single-task learning approach that fine-tunes the pre-trained Vietnamese language model [PhoBERT](https://github.com/VinAIResearch/PhoBERT) for each task independently.
 
-The general architecture and experimental results of PhoNLP can be found in our [following paper](http://arxiv.org/abs/2101.01476):
+<p align="center">	
+<img width="600" alt="logo" src="https://user-images.githubusercontent.com/2412555/106093259-83271d00-6162-11eb-8fd6-93dbf4569aea.png">
+</p>
+
+Details of the PhoNLP model architecture and experimental results can be found in our [following paper](http://arxiv.org/abs/2101.01476):
 
     @article{PhoNLP,
     title     = {{PhoNLP: A joint multi-task learning model for Vietnamese part-of-speech tagging, named entity recognition and dependency parsing}},
