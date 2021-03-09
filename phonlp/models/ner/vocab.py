@@ -1,18 +1,19 @@
 from collections import Counter, OrderedDict
-import sys
-sys.path.append('../')
-from phonlp.models.common.vocab import BaseVocab, BaseMultiVocab
-from phonlp.models.common.vocab import VOCAB_PREFIX
+
+from phonlp.models.common.vocab import VOCAB_PREFIX, BaseMultiVocab, BaseVocab
 from phonlp.models.pos.vocab import CharVocab, WordVocab
+
 
 class TagVocab(BaseVocab):
     """ A vocab for the output tag sequence. """
+
     def build_vocab(self):
         counter = Counter([w[self.idx] for sent in self.data for w in sent])
 
         # self._id2unit = VOCAB_PREFIX + list(sorted(list(counter.keys()), key=lambda k: counter[k], reverse=True))
         self._id2unit = VOCAB_PREFIX + list(sorted(list(counter.keys()), key=lambda k: counter[k], reverse=True))
-        self._unit2id = {w:i for i, w in enumerate(self._id2unit)}
+        self._unit2id = {w: i for i, w in enumerate(self._id2unit)}
+
 
 class MultiVocab(BaseMultiVocab):
     def state_dict(self):
@@ -22,19 +23,16 @@ class MultiVocab(BaseMultiVocab):
         for k, v in self._vocabs.items():
             state[k] = v.state_dict()
             key2class[k] = type(v).__name__
-        state['_key2class'] = key2class
+        state["_key2class"] = key2class
         return state
 
     @classmethod
     def load_state_dict(cls, state_dict):
-        class_dict = {'CharVocab': CharVocab,
-                'WordVocab': WordVocab,
-                'TagVocab': TagVocab}
+        class_dict = {"CharVocab": CharVocab, "WordVocab": WordVocab, "TagVocab": TagVocab}
         new = cls()
-        assert '_key2class' in state_dict, "Cannot find class name mapping in state dict!"
-        key2class = state_dict.pop('_key2class')
-        for k,v in state_dict.items():
+        assert "_key2class" in state_dict, "Cannot find class name mapping in state dict!"
+        key2class = state_dict.pop("_key2class")
+        for k, v in state_dict.items():
             classname = key2class[k]
             new[k] = class_dict[classname].load_state_dict(v)
         return new
-

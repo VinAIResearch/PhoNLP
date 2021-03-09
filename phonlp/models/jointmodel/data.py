@@ -1,19 +1,29 @@
-import random
 import logging
-import torch
+import random
 
-import sys
-sys.path.append('../')
-from models.common.data import map_to_ids, get_long_tensor, get_float_tensor, sort_all
-from models.common.vocab import PAD_ID, VOCAB_PREFIX, ROOT_ID, CompositeVocab
-from models.pos.vocab import CharVocab, WordVocab, MultiVocab
-from models.common.doc import *
-from models.ner.vocab import TagVocab, MultiVocab
-logger = logging.getLogger('PhoNLPToolkit')
+import torch
+from phonlp.models.common.data import get_long_tensor, sort_all
+from phonlp.models.common.doc import DEPREL, HEAD, TEXT
+from phonlp.models.common.vocab import PAD_ID, ROOT_ID
+from phonlp.models.ner.vocab import TagVocab
+from phonlp.models.pos.vocab import CharVocab, MultiVocab, WordVocab
+
+
+logger = logging.getLogger("PhoNLPToolkit")
+
 
 class DataLoaderPOS:
-    def __init__(self, path_file, batch_size, args, vocab=None, evaluation=False, sort_during_eval=False,
-                 tokenizer=None, max_seq_length=None):
+    def __init__(
+        self,
+        path_file,
+        batch_size,
+        args,
+        vocab=None,
+        evaluation=False,
+        sort_during_eval=False,
+        tokenizer=None,
+        max_seq_length=None,
+    ):
         self.batch_size = batch_size
         self.args = args
         self.eval = evaluation
@@ -26,7 +36,7 @@ class DataLoaderPOS:
         self.vocab = vocab
 
         data = self.preprocess(data, self.vocab, tokenizer, max_seq_length)
-        if evaluation == True:
+        if evaluation is True:
             print("Number of evaluation sentences for POS tagging: ", len(data))
         else:
             print("Number of training sentences for POS tagging: ", len(data))
@@ -48,18 +58,24 @@ class DataLoaderPOS:
             firstSWindices = [len(input_ids)]
             for w in sent:
                 word_token = tokenizer.encode(w[0])
-                input_ids += word_token[1:(len(word_token) - 1)]
+                input_ids += word_token[1 : (len(word_token) - 1)]
                 firstSWindices.append(len(input_ids))
-            firstSWindices = firstSWindices[:(len(firstSWindices) - 1)]
+            firstSWindices = firstSWindices[: (len(firstSWindices) - 1)]
             input_ids.append(sep_id)
             if len(input_ids) > max_seq_length:
                 input_ids = input_ids[:max_seq_length]
             else:
-                input_ids = input_ids + [pad_id, ] * (max_seq_length - len(input_ids))
+                input_ids = (
+                    input_ids
+                    + [
+                        pad_id,
+                    ]
+                    * (max_seq_length - len(input_ids))
+                )
 
             processed_sent = [input_ids]
             processed_sent += [firstSWindices]
-            processed_sent += [vocab['upos'].map([w[1] for w in sent])]
+            processed_sent += [vocab["upos"].map([w[1] for w in sent])]
             processed.append(processed_sent)
         return processed
 
@@ -100,8 +116,9 @@ class DataLoaderPOS:
             for tok_idx in range(len(data[sent_idx])):
                 for feat_idx in range(len(data[sent_idx][tok_idx])):
                     if data[sent_idx][tok_idx][feat_idx] is None:
-                        data[sent_idx][tok_idx][feat_idx] = '_'
+                        data[sent_idx][tok_idx][feat_idx] = "_"
         return data
+
     def reshuffle(self):
         data = [y for x in self.data for y in x]
         random.shuffle(self.data)
@@ -112,7 +129,7 @@ class DataLoaderPOS:
 
         if not self.eval:
             # sort sentences (roughly) by length for better memory utilization
-            data = sorted(data, key=lambda x: len(x[2]), reverse=random.random() > .5)
+            data = sorted(data, key=lambda x: len(x[2]), reverse=random.random() > 0.5)
         elif self.sort_during_eval:
             (data,), self.data_orig_idx_pos = sort_all([data], [len(x[2]) for x in data])
 
@@ -130,15 +147,24 @@ class DataLoaderPOS:
 
 
 class DataLoaderDep:
-    def __init__(self, doc_dep, batch_size, args, vocab=None, evaluation=False, sort_during_eval=False,
-                 tokenizer=None, max_seq_length=None):
+    def __init__(
+        self,
+        doc_dep,
+        batch_size,
+        args,
+        vocab=None,
+        evaluation=False,
+        sort_during_eval=False,
+        tokenizer=None,
+        max_seq_length=None,
+    ):
         self.batch_size = batch_size
         self.args = args
         self.eval = evaluation
         self.shuffled = not self.eval
         self.sort_during_eval = sort_during_eval
         self.doc_dep = doc_dep
-        data_dep = self.load_doc(doc_dep)  ###list sentences of list words of list fields
+        data_dep = self.load_doc(doc_dep)  # list sentences of list words of list fields
         self.head = [[w[1] for w in sent] for sent in data_dep]
         self.deprel = [[w[2] for w in sent] for sent in data_dep]
 
@@ -146,7 +172,7 @@ class DataLoaderDep:
         self.vocab = vocab
 
         data_dep = self.preprocess(data_dep, self.vocab, tokenizer, max_seq_length)
-        if evaluation == True:
+        if evaluation is True:
             print("Number of evaluation sentences for dependency parsing: ", len(data_dep))
         else:
             print("Number of training sentences for dependency parsing: ", len(data_dep))
@@ -157,7 +183,6 @@ class DataLoaderDep:
         # chunk into batches
         self.data_dep = self.chunk_batches(data_dep)
 
-
     def preprocess(self, data_dep, vocab, tokenizer, max_seq_length):
         pad_id = 1
         cls_id = 0
@@ -167,29 +192,35 @@ class DataLoaderDep:
             input_ids = [cls_id]
             firstSWindices = [len(input_ids)]
             root_token = tokenizer.encode("[ROOT]")
-            input_ids += root_token[1:(len(root_token) - 1)]
+            input_ids += root_token[1 : (len(root_token) - 1)]
             firstSWindices.append(len(input_ids))
             for w in sent:
                 word_token = tokenizer.encode(w[0])
-                input_ids += word_token[1:(len(word_token) - 1)]
+                input_ids += word_token[1 : (len(word_token) - 1)]
                 firstSWindices.append(len(input_ids))
-            firstSWindices = firstSWindices[:(len(firstSWindices) - 1)]
+            firstSWindices = firstSWindices[: (len(firstSWindices) - 1)]
             input_ids.append(sep_id)
             if len(input_ids) > max_seq_length:
                 input_ids = input_ids[:max_seq_length]
             else:
-                input_ids = input_ids + [pad_id, ] * (max_seq_length - len(input_ids))
+                input_ids = (
+                    input_ids
+                    + [
+                        pad_id,
+                    ]
+                    * (max_seq_length - len(input_ids))
+                )
 
             processed_sent = [input_ids]
             processed_sent += [firstSWindices]
-            processed_sent += [[ROOT_ID] + vocab['word'].map([w[0] for w in sent])]
+            processed_sent += [[ROOT_ID] + vocab["word"].map([w[0] for w in sent])]
             ##
-            processed_sent += [[[ROOT_ID]] + [vocab['char'].map([x for x in w[0]]) for w in sent]]
+            processed_sent += [[[ROOT_ID]] + [vocab["char"].map([x for x in w[0]]) for w in sent]]
             processed_sent += [[to_int(w[1], ignore_error=self.eval) for w in sent]]
-            processed_sent += [vocab['deprel'].map([w[2] for w in sent])]
+            processed_sent += [vocab["deprel"].map([w[2] for w in sent])]
             processed_dep.append(processed_sent)
 
-        return processed_dep  ### [sent1,sent2,...] sent1 = list of list
+        return processed_dep  # [sent1,sent2,...] sent1 = list of list
 
     def __len__(self):
         return len(self.data_dep)
@@ -229,7 +260,16 @@ class DataLoaderDep:
         dep_sentlens = [len(x) for x in dep_batch[1]]
         dep_head = get_long_tensor(dep_batch[4], dep_batch_size)
         dep_deprel = get_long_tensor(dep_batch[5], dep_batch_size)
-        dep_data = (dep_tokens_phobert, dep_first_subword, dep_words_mask, dep_head, dep_deprel, dep_number_of_words, dep_orig_idx, dep_sentlens)
+        dep_data = (
+            dep_tokens_phobert,
+            dep_first_subword,
+            dep_words_mask,
+            dep_head,
+            dep_deprel,
+            dep_number_of_words,
+            dep_orig_idx,
+            dep_sentlens,
+        )
         return dep_data
 
     def __iter__(self):
@@ -243,7 +283,7 @@ class DataLoaderDep:
         random.shuffle(self.data_dep)
 
     def load_doc(self, doc):
-        data = doc.get([TEXT, HEAD, DEPREL], as_sentences=True)  ##[[[cac value trong 1 token]]]
+        data = doc.get([TEXT, HEAD, DEPREL], as_sentences=True)  # [[[cac value trong 1 token]]]
         data = self.resolve_none(data)
         return data
 
@@ -253,14 +293,14 @@ class DataLoaderDep:
             for tok_idx in range(len(data[sent_idx])):
                 for feat_idx in range(len(data[sent_idx][tok_idx])):
                     if data[sent_idx][tok_idx][feat_idx] is None:
-                        data[sent_idx][tok_idx][feat_idx] = '_'
+                        data[sent_idx][tok_idx][feat_idx] = "_"
         return data
 
     def chunk_batches(self, data):
         res = []
         if not self.eval:
             # sort sentences (roughly) by length for better memory utilization
-            data = sorted(data, key=lambda x: len(x[2]), reverse=random.random() > .5)
+            data = sorted(data, key=lambda x: len(x[2]), reverse=random.random() > 0.5)
         elif self.sort_during_eval:
             (data,), self.data_orig_idx_dep = sort_all([data], [len(x[2]) for x in data])
         current = []
@@ -272,7 +312,8 @@ class DataLoaderDep:
 
         if len(current) > 0:
             res.append(current)
-        return res  ##list of list by sentences of list by token
+        return res  # list of list by sentences of list by token
+
 
 class DataLoaderNER:
     def __init__(self, path_file, batch_size, args, vocab=None, evaluation=False, tokenizer=None, max_seq_length=None):
@@ -286,7 +327,7 @@ class DataLoaderNER:
         self.vocab = vocab
 
         data = self.preprocess(data, self.vocab, args, tokenizer, max_seq_length)
-        if evaluation == True:
+        if evaluation is True:
             print("Number of evaluation sentences for NER: ", len(data))
         else:
             print("Number of training sentences for NER: ", len(data))
@@ -308,18 +349,24 @@ class DataLoaderNER:
             firstSWindices = [len(input_ids)]
             for w in sent:
                 word_token = tokenizer.encode(w[0])
-                input_ids += word_token[1:(len(word_token) - 1)]
+                input_ids += word_token[1 : (len(word_token) - 1)]
                 firstSWindices.append(len(input_ids))
-            firstSWindices = firstSWindices[:(len(firstSWindices) - 1)]
+            firstSWindices = firstSWindices[: (len(firstSWindices) - 1)]
             input_ids.append(sep_id)
             if len(input_ids) > max_seq_length:
                 input_ids = input_ids[:max_seq_length]
             else:
-                input_ids = input_ids + [pad_id, ] * (max_seq_length - len(input_ids))
+                input_ids = (
+                    input_ids
+                    + [
+                        pad_id,
+                    ]
+                    * (max_seq_length - len(input_ids))
+                )
             processed_sent = [input_ids]
             processed_sent += [firstSWindices]
-            processed_sent += [vocab['word'].map([w[0] for w in sent])]
-            processed_sent += [vocab['ner_tag'].map([w[1] for w in sent])]
+            processed_sent += [vocab["word"].map([w[0] for w in sent])]
+            processed_sent += [vocab["ner_tag"].map([w[1] for w in sent])]
             processed.append(processed_sent)
         return processed
 
@@ -330,7 +377,7 @@ class DataLoaderNER:
         """ Get a batch with index. """
         if not isinstance(key, int):
             raise TypeError
-        if key < 0: # or key % len(self.data):
+        if key < 0:  # or key % len(self.data):
             raise IndexError
         key = key % len(self.data)
         batch = self.data[key]
@@ -363,8 +410,9 @@ class DataLoaderNER:
         self.data = self.chunk_batches(data)
 
     def chunk_batches(self, data):
-        data = [data[i:i+self.batch_size] for i in range(0, len(data), self.batch_size)]
+        data = [data[i : i + self.batch_size] for i in range(0, len(data), self.batch_size)]
         return data
+
 
 def read_file(file):
     f = open(file)
@@ -376,11 +424,12 @@ def read_file(file):
                 doc.append(sent)
                 sent = []
         else:
-            array = line.split('\t')
+            array = line.split("\t")
             sent += [array]
     if len(sent) > 0:
         doc.append(sent)
     return doc
+
 
 class BuildVocab:
     def __init__(self, args, path_pos, doc_dep, path_ner):
@@ -397,13 +446,11 @@ class BuildVocab:
         ner_tag = TagVocab(data_ner, idx=1)
         charvocab = CharVocab(data)
         wordvocab = WordVocab(data, cutoff=7, lower=True)
-        vocab = MultiVocab({'upos': uposvocab,
-                            'deprel': deprelvocab,
-                            'ner_tag': ner_tag,
-                            'char': charvocab,
-                            'word': wordvocab
-                                })
+        vocab = MultiVocab(
+            {"upos": uposvocab, "deprel": deprelvocab, "ner_tag": ner_tag, "char": charvocab, "word": wordvocab}
+        )
         return vocab
+
     def load_doc_dep(self, doc):
         data = doc.get([TEXT, HEAD, DEPREL], as_sentences=True)
         data = self.resolve_none(data)
@@ -415,8 +462,10 @@ class BuildVocab:
             for tok_idx in range(len(data[sent_idx])):
                 for feat_idx in range(len(data[sent_idx][tok_idx])):
                     if data[sent_idx][tok_idx][feat_idx] is None:
-                        data[sent_idx][tok_idx][feat_idx] = '_'
+                        data[sent_idx][tok_idx][feat_idx] = "_"
         return data
+
+
 def to_int(string, ignore_error=False):
     try:
         res = int(string)
@@ -426,4 +475,3 @@ def to_int(string, ignore_error=False):
         else:
             raise err
     return res
-

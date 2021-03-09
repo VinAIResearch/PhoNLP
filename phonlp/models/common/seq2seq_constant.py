@@ -2,13 +2,13 @@
 Constants for seq2seq models.
 """
 
-PAD = '<PAD>'
+PAD = "<PAD>"
 PAD_ID = 0
-UNK = '<UNK>'
+UNK = "<UNK>"
 UNK_ID = 1
-SOS = '<SOS>'
+SOS = "<SOS>"
 SOS_ID = 2
-EOS = '<EOS>'
+EOS = "<EOS>"
 EOS_ID = 3
 
 VOCAB_PREFIX = [PAD, UNK, SOS, EOS]

@@ -1,20 +1,18 @@
 # -*- coding: utf-8 -*-
 import numpy as np
+import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from torch.nn.utils.rnn import pad_packed_sequence, pack_padded_sequence, PackedSequence
 from phonlp.models.common import utils as util
-from tqdm import tqdm
-from phonlp.models.common.chuliu_edmonds import chuliu_edmonds_one_root
-import torch
-from phonlp.models.common.crf import viterbi_decode
-from phonlp.models.common.data import get_long_tensor, sort_all
-from phonlp.models.common.vocab import PAD_ID, ROOT_ID
 from phonlp.models.common.biaffine import DeepBiaffineScorer
-from phonlp.models.common.dropout import WordDropout, LockedDropout
-from phonlp.models.common.crf import CRFLoss
-from transformers import *
-from transformers import AutoModel
+from phonlp.models.common.chuliu_edmonds import chuliu_edmonds_one_root
+from phonlp.models.common.crf import CRFLoss, viterbi_decode
+from phonlp.models.common.data import get_long_tensor, sort_all
+from phonlp.models.common.dropout import LockedDropout, WordDropout
+from phonlp.models.common.vocab import PAD_ID, ROOT_ID
+from torch.nn.utils.rnn import PackedSequence, pack_padded_sequence, pad_packed_sequence
+from tqdm import tqdm
+from transformers import AutoModel, BertPreTrainedModel
 
 
 class JointModel(BertPreTrainedModel):
@@ -27,61 +25,90 @@ class JointModel(BertPreTrainedModel):
         self.config = config
         self.tokenizer = tokenizer
 
-
         # input layers
         self.input_size = 0
 
         self.phobert = AutoModel.from_config(self.config)
         self.input_size += self.config.to_dict()["hidden_size"]
 
-        self.drop_replacement_ner = nn.Parameter(torch.randn(self.input_size + self.args['tag_emb_dim']) / np.sqrt(
-            self.input_size + self.args['tag_emb_dim']))
-        self.drop_replacement_dep = nn.Parameter(torch.randn(self.input_size + self.args['tag_emb_dim']) / np.sqrt(
-            self.input_size + self.args['tag_emb_dim']))
-        self.drop_replacement_pos = nn.Parameter(torch.randn(self.input_size) / np.sqrt(
-            self.input_size))
+        self.drop_replacement_ner = nn.Parameter(
+            torch.randn(self.input_size + self.args["tag_emb_dim"])
+            / np.sqrt(self.input_size + self.args["tag_emb_dim"])
+        )
+        self.drop_replacement_dep = nn.Parameter(
+            torch.randn(self.input_size + self.args["tag_emb_dim"])
+            / np.sqrt(self.input_size + self.args["tag_emb_dim"])
+        )
+        self.drop_replacement_pos = nn.Parameter(torch.randn(self.input_size) / np.sqrt(self.input_size))
 
-        self.upos_hid = nn.Linear(self.input_size, self.args['deep_biaff_hidden_dim'])
-        self.upos_clf = nn.Linear(self.args['deep_biaff_hidden_dim'], len(vocab['upos']))
+        self.upos_hid = nn.Linear(self.input_size, self.args["deep_biaff_hidden_dim"])
+        self.upos_clf = nn.Linear(self.args["deep_biaff_hidden_dim"], len(vocab["upos"]))
 
-        self.upos_emb_matrix_ner = nn.Parameter(torch.rand(
-            len(vocab['upos']), self.args['tag_emb_dim']), requires_grad=True)
-        self.upos_emb_matrix_dep = nn.Parameter(torch.rand(
-            len(vocab['upos']), self.args['tag_emb_dim']), requires_grad=True)
+        self.upos_emb_matrix_ner = nn.Parameter(
+            torch.rand(len(vocab["upos"]), self.args["tag_emb_dim"]), requires_grad=True
+        )
+        self.upos_emb_matrix_dep = nn.Parameter(
+            torch.rand(len(vocab["upos"]), self.args["tag_emb_dim"]), requires_grad=True
+        )
         self.upos_clf.weight.data.zero_()
         self.upos_clf.bias.data.zero_()
 
-        self.dep_hid = nn.Linear(self.input_size + self.args['tag_emb_dim'], self.input_size + self.args['tag_emb_dim'])
+        self.dep_hid = nn.Linear(
+            self.input_size + self.args["tag_emb_dim"], self.input_size + self.args["tag_emb_dim"]
+        )
 
         # classifiers
-        self.unlabeled = DeepBiaffineScorer(self.input_size + self.args['tag_emb_dim'], self.input_size +
-                                            self.args['tag_emb_dim'], self.args['deep_biaff_hidden_dim'], 1, pairwise=True, dropout=args['dropout'])
-        self.deprel = DeepBiaffineScorer(self.input_size + self.args['tag_emb_dim'], self.input_size + self.args['tag_emb_dim'],
-                                         self.args['deep_biaff_hidden_dim'], len(vocab['deprel']), pairwise=True, dropout=args['dropout'])
-        if args['linearization']:
+        self.unlabeled = DeepBiaffineScorer(
+            self.input_size + self.args["tag_emb_dim"],
+            self.input_size + self.args["tag_emb_dim"],
+            self.args["deep_biaff_hidden_dim"],
+            1,
+            pairwise=True,
+            dropout=args["dropout"],
+        )
+        self.deprel = DeepBiaffineScorer(
+            self.input_size + self.args["tag_emb_dim"],
+            self.input_size + self.args["tag_emb_dim"],
+            self.args["deep_biaff_hidden_dim"],
+            len(vocab["deprel"]),
+            pairwise=True,
+            dropout=args["dropout"],
+        )
+        if args["linearization"]:
             self.linearization = DeepBiaffineScorer(
-                self.input_size + self.args['tag_emb_dim'], self.input_size + self.args['tag_emb_dim'], self.args['deep_biaff_hidden_dim'], 1, pairwise=True, dropout=args['dropout'])
-        if args['distance']:
-            self.distance = DeepBiaffineScorer(self.input_size + self.args['tag_emb_dim'], self.input_size +
-                                               self.args['tag_emb_dim'], self.args['deep_biaff_hidden_dim'], 1, pairwise=True, dropout=args['dropout'])
+                self.input_size + self.args["tag_emb_dim"],
+                self.input_size + self.args["tag_emb_dim"],
+                self.args["deep_biaff_hidden_dim"],
+                1,
+                pairwise=True,
+                dropout=args["dropout"],
+            )
+        if args["distance"]:
+            self.distance = DeepBiaffineScorer(
+                self.input_size + self.args["tag_emb_dim"],
+                self.input_size + self.args["tag_emb_dim"],
+                self.args["deep_biaff_hidden_dim"],
+                1,
+                pairwise=True,
+                dropout=args["dropout"],
+            )
 
-        self.ner_tag_clf = nn.Linear(self.input_size + self.args['tag_emb_dim'], len(self.vocab['ner_tag']))
+        self.ner_tag_clf = nn.Linear(self.input_size + self.args["tag_emb_dim"], len(self.vocab["ner_tag"]))
         self.ner_tag_clf.bias.data.zero_()
 
         # criterion
-        self.crit_ner = CRFLoss(len(self.vocab['ner_tag']))
-        self.crit_dep = nn.CrossEntropyLoss(ignore_index=-1, reduction='sum')  # ignore padding
+        self.crit_ner = CRFLoss(len(self.vocab["ner_tag"]))
+        self.crit_dep = nn.CrossEntropyLoss(ignore_index=-1, reduction="sum")  # ignore padding
         self.crit_pos = nn.CrossEntropyLoss(ignore_index=1)
-        self.drop_ner = nn.Dropout(args['dropout'])
-        self.worddrop_ner = WordDropout(args['word_dropout'])
-        self.lockeddrop = LockedDropout(args['word_dropout'])
+        self.drop_ner = nn.Dropout(args["dropout"])
+        self.worddrop_ner = WordDropout(args["word_dropout"])
+        self.lockeddrop = LockedDropout(args["word_dropout"])
 
-        self.drop_pos = nn.Dropout(args['dropout'])
-        self.worddrop_pos = WordDropout(args['word_dropout'])
+        self.drop_pos = nn.Dropout(args["dropout"])
+        self.worddrop_pos = WordDropout(args["word_dropout"])
 
-        self.drop_dep = nn.Dropout(args['dropout'])
-        self.worddrop_dep = WordDropout(args['word_dropout'])
-
+        self.drop_dep = nn.Dropout(args["dropout"])
+        self.worddrop_dep = WordDropout(args["word_dropout"])
 
     def tagger_forward(self, tokens_phobert, words_phobert, sentlens):
         def pack(x):
@@ -90,8 +117,10 @@ class JointModel(BertPreTrainedModel):
         inputs = []
 
         phobert_emb = self.phobert(tokens_phobert)[2][-1]
-        phobert_emb = torch.cat([torch.index_select(phobert_emb[i], 0, words_phobert[i]).unsqueeze(0) for i in
-                                     range(phobert_emb.size(0))], dim=0)
+        phobert_emb = torch.cat(
+            [torch.index_select(phobert_emb[i], 0, words_phobert[i]).unsqueeze(0) for i in range(phobert_emb.size(0))],
+            dim=0,
+        )
         if torch.cuda.is_available():
             phobert_emb = phobert_emb.cuda()
         phobert_emb = pack(phobert_emb)
@@ -125,10 +154,13 @@ class JointModel(BertPreTrainedModel):
     def dep_forward(self, tokens_phobert, first_subword, sentlens):
         def pack(x):
             return pack_padded_sequence(x, sentlens, batch_first=True)
+
         inputs = []
         phobert_emb = self.phobert(tokens_phobert)[2][-1]
-        phobert_emb = torch.cat([torch.index_select(phobert_emb[i], 0, first_subword[i]).unsqueeze(0) for i in
-                                     range(phobert_emb.size(0))], dim=0)
+        phobert_emb = torch.cat(
+            [torch.index_select(phobert_emb[i], 0, first_subword[i]).unsqueeze(0) for i in range(phobert_emb.size(0))],
+            dim=0,
+        )
         if torch.cuda.is_available():
             phobert_emb = phobert_emb.cuda()
         phobert_emb = pack(phobert_emb)
@@ -157,17 +189,18 @@ class JointModel(BertPreTrainedModel):
         unlabeled_scores = self.unlabeled(self.drop_dep(hidden_out), self.drop_dep(hidden_out)).squeeze(3)
         deprel_scores = self.deprel(self.drop_dep(hidden_out), self.drop_dep(hidden_out))
 
-        if self.args['linearization'] or self.args['distance']:
+        if self.args["linearization"] or self.args["distance"]:
             head_offset = torch.arange(first_subword.size(1), device=unlabeled_scores.device).view(1, 1, -1).expand(
-                first_subword.size(0), -1, -1) - torch.arange(first_subword.size(1),
-                                                              device=unlabeled_scores.device).view(1, -1, 1).expand(
-                first_subword.size(0), -1, -1)
+                first_subword.size(0), -1, -1
+            ) - torch.arange(first_subword.size(1), device=unlabeled_scores.device).view(1, -1, 1).expand(
+                first_subword.size(0), -1, -1
+            )
 
-        if self.args['linearization']:
+        if self.args["linearization"]:
             lin_scores = self.linearization(self.drop_dep(hidden_out), self.drop_dep(hidden_out)).squeeze(3)
             unlabeled_scores += F.logsigmoid(lin_scores * torch.sign(head_offset).float()).detach()
 
-        if self.args['distance']:
+        if self.args["distance"]:
             dist_scores = self.distance(self.drop_dep(hidden_out), self.drop_dep(hidden_out)).squeeze(3)
             dist_pred = 1 + F.softplus(dist_scores)
             dist_target = torch.abs(head_offset)
@@ -175,23 +208,23 @@ class JointModel(BertPreTrainedModel):
             unlabeled_scores += dist_kld.detach()
 
         diag = torch.eye(unlabeled_scores.size(-1), dtype=torch.bool, device=unlabeled_scores.device).unsqueeze(0)
-        unlabeled_scores.masked_fill_(diag, -float('inf'))
+        unlabeled_scores.masked_fill_(diag, -float("inf"))
 
         preds = []
         preds.append(F.log_softmax(unlabeled_scores, 2).detach().cpu().numpy())
         preds.append(deprel_scores.max(3)[1].detach().cpu().numpy())
         return preds
 
-    def annotate(self, text=None, input_file=None, output_file=None, batch_size=1, output_type=''):
+    def annotate(self, text=None, input_file=None, output_file=None, batch_size=1, output_type=""):
         if text is not None:
-            data = [text.split(' ')]
+            data = [text.split(" ")]
         else:
             f = open(input_file)
             data = []
             for line in f:
                 line = line.strip()
                 if len(line) != 0:
-                    data.append(line.split(' '))
+                    data.append(line.split(" "))
             f.close()
             print("The number of sentences: ", len(data))
         data_tagger = self.process_data_tagger(batch_text=data)
@@ -202,28 +235,45 @@ class JointModel(BertPreTrainedModel):
         test_preds_dep = []
         test_preds_ner = []
         for i in tqdm(range(len(data_tagger))):
-            tokens_phobert, first_subword, words_mask, number_of_words, orig_idx, sentlens = self.get_batch(i, data_tagger)
-            tokens_phobert1, first_subword1, words_mask1, number_of_words1, orig_idx1, sentlens1 = self.get_batch(i, data_parser)
+            tokens_phobert, first_subword, words_mask, number_of_words, orig_idx, sentlens = self.get_batch(
+                i, data_tagger
+            )
+            tokens_phobert1, first_subword1, words_mask1, number_of_words1, orig_idx1, sentlens1 = self.get_batch(
+                i, data_parser
+            )
             if torch.cuda.is_available():
-                tokens_phobert, first_subword, words_mask = tokens_phobert.cuda(), first_subword.cuda(), words_mask.cuda()
-                tokens_phobert1, first_subword1, words_mask1 = tokens_phobert1.cuda(), first_subword1.cuda(), words_mask1.cuda()
+                tokens_phobert, first_subword, words_mask = (
+                    tokens_phobert.cuda(),
+                    first_subword.cuda(),
+                    words_mask.cuda(),
+                )
+                tokens_phobert1, first_subword1, words_mask1 = (
+                    tokens_phobert1.cuda(),
+                    first_subword1.cuda(),
+                    words_mask1.cuda(),
+                )
 
             preds_dep = self.dep_forward(tokens_phobert1, first_subword1, sentlens1)
             preds_pos, logits = self.tagger_forward(tokens_phobert, first_subword, sentlens)
             batch_size = tokens_phobert.size(0)
-            ##DEP
-            head_seqs = [chuliu_edmonds_one_root(adj[:l, :l])[1:] for adj, l in
-                     zip(preds_dep[0], sentlens1)]  # remove attachment for the root
-            deprel_seqs = [self.vocab['deprel'].unmap([preds_dep[1][i][j + 1][h] for j, h in enumerate(hs)]) for i, hs in
-                       enumerate(head_seqs)]
-            pred_tokens = [[[str(head_seqs[i][j]), deprel_seqs[i][j]] for j in range(sentlens1[i] - 1)] for i in
-                       range(batch_size)]
+            # DEP
+            head_seqs = [
+                chuliu_edmonds_one_root(adj[:l, :l])[1:] for adj, l in zip(preds_dep[0], sentlens1)
+            ]  # remove attachment for the root
+            deprel_seqs = [
+                self.vocab["deprel"].unmap([preds_dep[1][i][j + 1][h] for j, h in enumerate(hs)])
+                for i, hs in enumerate(head_seqs)
+            ]
+            pred_tokens = [
+                [[str(head_seqs[i][j]), deprel_seqs[i][j]] for j in range(sentlens1[i] - 1)] for i in range(batch_size)
+            ]
             pred_tokens_dep = util.unsort(pred_tokens, orig_idx1)
 
-            ##POS
-            upos_seqs = [self.vocab['upos'].unmap(sent) for sent in preds_pos[0]]
-            pred_tokens_pos = [[[upos_seqs[i][j]] for j in range(sentlens[i])] for i in
-                           range(batch_size)]  # , xpos_seqs[i][j], feats_seqs[i][j]
+            # POS
+            upos_seqs = [self.vocab["upos"].unmap(sent) for sent in preds_pos[0]]
+            pred_tokens_pos = [
+                [[upos_seqs[i][j]] for j in range(sentlens[i])] for i in range(batch_size)
+            ]  # , xpos_seqs[i][j], feats_seqs[i][j]
             pred_tokens_pos = util.unsort(pred_tokens_pos, orig_idx)
 
             trans = self.crit_ner._transitions.data.cpu().numpy()
@@ -231,8 +281,8 @@ class JointModel(BertPreTrainedModel):
             bs = logits.size(0)
             tag_seqs = []
             for i in range(bs):
-                tags, _ = viterbi_decode(scores[i, :sentlens[i]], trans)
-                tags = self.vocab['ner_tag'].unmap(tags)
+                tags, _ = viterbi_decode(scores[i, : sentlens[i]], trans)
+                tags = self.vocab["ner_tag"].unmap(tags)
                 tag_seqs += [tags]
             tag_seqs = util.unsort(tag_seqs, orig_idx)
             test_preds_ner += tag_seqs
@@ -244,36 +294,92 @@ class JointModel(BertPreTrainedModel):
         if text is not None:
             return (data, test_preds_pos, test_preds_ner, test_preds_dep)
         else:
-            f = open(output_file, 'w')
+            f = open(output_file, "w")
             for i in range(len(data)):
                 for j in range(len(data[i])):
-                    if output_type == 'conll':
-                        f.write(str(j + 1) + '\t' + data[i][j] + '\t' + '_' + '\t' + '_' + '\t' + test_preds_pos[i][j][
-                                0] + '\t' + '_' + '\t' + test_preds_dep[i][j][0] + '\t' + test_preds_dep[i][j][
-                                        1] + '\t' + '_' + '\t' +
-                                    test_preds_ner[i][j] + '\n')
+                    if output_type == "conll":
+                        f.write(
+                            str(j + 1)
+                            + "\t"
+                            + data[i][j]
+                            + "\t"
+                            + "_"
+                            + "\t"
+                            + "_"
+                            + "\t"
+                            + test_preds_pos[i][j][0]
+                            + "\t"
+                            + "_"
+                            + "\t"
+                            + test_preds_dep[i][j][0]
+                            + "\t"
+                            + test_preds_dep[i][j][1]
+                            + "\t"
+                            + "_"
+                            + "\t"
+                            + test_preds_ner[i][j]
+                            + "\n"
+                        )
                     else:
-                        f.write(str(j + 1) + '\t' + data[i][j] + '\t'  + test_preds_pos[i][j][0] + '\t' +
-                                test_preds_ner[i][j] +'\t' + test_preds_dep[i][j][0] + '\t' + test_preds_dep[i][j][1] + '\n')
-                f.write('\n')
+                        f.write(
+                            str(j + 1)
+                            + "\t"
+                            + data[i][j]
+                            + "\t"
+                            + test_preds_pos[i][j][0]
+                            + "\t"
+                            + test_preds_ner[i][j]
+                            + "\t"
+                            + test_preds_dep[i][j][0]
+                            + "\t"
+                            + test_preds_dep[i][j][1]
+                            + "\n"
+                        )
+                f.write("\n")
             f.close()
 
-    def print_out(self, output, output_type=''):
+    def print_out(self, output, output_type=""):
         data, test_preds_pos, test_preds_ner, test_preds_dep = output
         for i in range(len(data)):
             for j in range(len(data[i])):
-                if output_type == 'conll':
-                    print(str(j + 1) + '\t' + data[i][j] + '\t' + '_' + '\t' + '_' + '\t' + test_preds_pos[i][j][
-                        0] + '\t' + '_' + '\t' + test_preds_dep[i][j][0] + '\t' + test_preds_dep[i][j][
-                                1] + '\t' + '_' + '\t' +
-                            test_preds_ner[i][j])
+                if output_type == "conll":
+                    print(
+                        str(j + 1)
+                        + "\t"
+                        + data[i][j]
+                        + "\t"
+                        + "_"
+                        + "\t"
+                        + "_"
+                        + "\t"
+                        + test_preds_pos[i][j][0]
+                        + "\t"
+                        + "_"
+                        + "\t"
+                        + test_preds_dep[i][j][0]
+                        + "\t"
+                        + test_preds_dep[i][j][1]
+                        + "\t"
+                        + "_"
+                        + "\t"
+                        + test_preds_ner[i][j]
+                    )
                 else:
-                    print(str(j + 1) + '\t' + data[i][j] + '\t' + test_preds_pos[i][j][0] + '\t' +
-                            test_preds_ner[i][j] + '\t' + test_preds_dep[i][j][0] + '\t' + test_preds_dep[i][j][
-                                1])
+                    print(
+                        str(j + 1)
+                        + "\t"
+                        + data[i][j]
+                        + "\t"
+                        + test_preds_pos[i][j][0]
+                        + "\t"
+                        + test_preds_ner[i][j]
+                        + "\t"
+                        + test_preds_dep[i][j][0]
+                        + "\t"
+                        + test_preds_dep[i][j][1]
+                    )
 
     def process_data_tagger(self, batch_text):
-        pad_id = 1
         cls_id = 0
         sep_id = 2
         processed = []
@@ -282,19 +388,18 @@ class JointModel(BertPreTrainedModel):
             firstSWindices = [len(input_ids)]
             for w in sent:
                 word_token = self.tokenizer.encode(w)
-                input_ids += word_token[1:(len(word_token) - 1)]
+                input_ids += word_token[1 : (len(word_token) - 1)]
                 firstSWindices.append(len(input_ids))
-            firstSWindices = firstSWindices[:(len(firstSWindices) - 1)]
+            firstSWindices = firstSWindices[: (len(firstSWindices) - 1)]
             input_ids.append(sep_id)
             processed_sent = [input_ids]
             processed_sent += [firstSWindices]
-            processed_sent += [self.vocab['word'].map([w for w in sent])]
-            processed_sent += [[self.vocab['char'].map([x for x in w]) for w in sent]]
+            processed_sent += [self.vocab["word"].map([w for w in sent])]
+            processed_sent += [[self.vocab["char"].map([x for x in w]) for w in sent]]
             processed.append(processed_sent)
         return processed
 
     def process_data_parser(self, batch_text):
-        pad_id = 1
         cls_id = 0
         sep_id = 2
         processed = []
@@ -302,19 +407,19 @@ class JointModel(BertPreTrainedModel):
             input_ids = [cls_id]
             firstSWindices = [len(input_ids)]
             root_token = self.tokenizer.encode("[ROOT]")
-            input_ids += root_token[1:(len(root_token) - 1)]
+            input_ids += root_token[1 : (len(root_token) - 1)]
             firstSWindices.append(len(input_ids))
             for w in sent:
                 word_token = self.tokenizer.encode(w)
-                input_ids += word_token[1:(len(word_token) - 1)]
+                input_ids += word_token[1 : (len(word_token) - 1)]
                 firstSWindices.append(len(input_ids))
-            firstSWindices = firstSWindices[:(len(firstSWindices) - 1)]
+            firstSWindices = firstSWindices[: (len(firstSWindices) - 1)]
             input_ids.append(sep_id)
 
             processed_sent = [input_ids]
             processed_sent += [firstSWindices]
-            processed_sent += [[ROOT_ID] + self.vocab['word'].map([w for w in sent])]
-            processed_sent += [[[ROOT_ID]] + [self.vocab['char'].map([x for x in w]) for w in sent]]
+            processed_sent += [[ROOT_ID] + self.vocab["word"].map([w for w in sent])]
+            processed_sent += [[[ROOT_ID]] + [self.vocab["char"].map([x for x in w]) for w in sent]]
             processed.append(processed_sent)
         return processed
 

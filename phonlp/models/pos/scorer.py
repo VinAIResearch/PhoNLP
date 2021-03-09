@@ -3,22 +3,25 @@ Utils and wrappers for scoring taggers.
 """
 import logging
 
-from models.common.utils import ud_scores
+from phonlp.models.common.utils import ud_scores
 
-logger = logging.getLogger('PhoToolkit')
+
+logger = logging.getLogger("PhoToolkit")
+
 
 def score(system_conllu_file, gold_conllu_file, verbose=True):
     """ Wrapper for tagger scorer. """
     evaluation = ud_scores(gold_conllu_file, system_conllu_file)
-    el = evaluation['AllTags']
+    el = evaluation["AllTags"]
     p = el.precision
     r = el.recall
     f = el.f1
     if verbose:
-        scores = [evaluation[k].f1 * 100 for k in ['UPOS', 'XPOS', 'UFeats', 'AllTags']]
+        scores = [evaluation[k].f1 * 100 for k in ["UPOS", "XPOS", "UFeats", "AllTags"]]
         logger.info("UPOS\tXPOS\tUFeats\tAllTags")
         logger.info("{:.2f}\t{:.2f}\t{:.2f}\t{:.2f}".format(*scores))
     return p, r, f
+
 
 def score_acc(pred_pos, gold_pos):
     """ Wrapper for tagger scorer. """
