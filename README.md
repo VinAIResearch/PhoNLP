@@ -1,26 +1,33 @@
+- [Introduction](#introduction)
+- [Usage example: Command lines](#command)
+- [Usage example: Python API](#api)
+- [Pre-trained PhoNLP model](#pretrained)
+
 <p align="center">	
 <img width="100" alt="logo" src="https://user-images.githubusercontent.com/2412555/106093264-85897700-6162-11eb-9777-e2068d4442f2.png">
 </p>
 
 
-# PhoNLP: A BERT-based multi-task learning model for part-of-speech tagging, named entity recognition and dependency parsing
+# <a name="introduction"></a> PhoNLP: A BERT-based multi-task learning model for part-of-speech tagging, named entity recognition and dependency parsing
 
 PhoNLP is a multi-task learning model for joint part-of-speech (POS) tagging, named entity recognition (NER) and dependency parsing. Experiments on Vietnamese benchmark datasets show that PhoNLP produces state-of-the-art results, outperforming a single-task learning approach that fine-tunes the pre-trained Vietnamese language model [PhoBERT](https://github.com/VinAIResearch/PhoBERT) for each task independently.
+
+_Although we evaluate PhoNLP on Vietnamese, our usage examples below can directly work for other languages that have gold annotated corpora available for the three tasks of POS tagging, NER and dependency parsing, and a pre-trained BERT-based language model available from [transformers](https://huggingface.co/models) (e.g. BERT, mBERT, RoBERTa, XLM-RoBERTa)._
 
 <p align="center">	
 <img width="600" alt="logo" src="https://user-images.githubusercontent.com/2412555/106093259-83271d00-6162-11eb-8fd6-93dbf4569aea.png">
 </p>
 
-Details of the PhoNLP model architecture and experimental results can be found in our [following paper](http://arxiv.org/abs/2101.01476):
+Details of the PhoNLP model architecture and experimental results can be found in our [following paper](https://aclanthology.org/2021.naacl-demos.1/):
 
     @inproceedings{phonlp,
     title     = {{PhoNLP: A joint multi-task learning model for Vietnamese part-of-speech tagging, named entity recognition and dependency parsing}},
     author    = {Linh The Nguyen and Dat Quoc Nguyen},
     booktitle = {Proceedings of the 2021 Conference of the North American Chapter of the Association for Computational Linguistics: Demonstrations},
+    pages     = {1--7},
     year      = {2021}
     }
 
-_Although we specify PhoNLP for Vietnamese, usage examples below in fact can directly work for other languages that have gold annotated corpora available for the three tasks of POS tagging, NER and dependency parsing, and a pre-trained BERT-based language model available from [transformers](https://huggingface.co/models)._
 
 **Please CITE** our paper when PhoNLP is used to help produce published results or incorporated into other software.
 
@@ -35,7 +42,7 @@ _Although we specify PhoNLP for Vietnamese, usage examples below in fact can dir
 	pip3 install -e .
 	```
 
-## Usage example: Command lines
+## <a name="command"></a> Usage example: Command lines
 
 To play with the examples using command lines, please install `phonlp` from the source:	
 ```
@@ -115,18 +122,13 @@ python3 run_phonlp.py --mode annotate --save_dir ./phonlp_tmp \
 	--output_file ../sample_data/output.txt 
 ```
 
-#### The pre-trained PhoNLP model for Vietnamese is available at [HERE](https://public.vinai.io/phonlp.pt)!
 
-
-## Usage example: Python API
+## <a name="api"></a> Usage example: Python API
 
 ```python
 import phonlp
-# Automatically download the pre-trained PhoNLP model 
-# and save it in a local machine folder
-phonlp.download(save_dir='./pretrained_phonlp')
-# Load the pre-trained PhoNLP model
-model = phonlp.load(save_dir='./pretrained_phonlp')
+# Load the trained PhoNLP model
+model = phonlp.load(save_dir='./phonlp_tmp')
 # Annotate a corpus where each line represents a word-segmented sentence
 model.annotate(input_file='input.txt', output_file='output.txt')
 # Annotate a word-segmented sentence
@@ -144,4 +146,62 @@ By default, the output for each input sentence is formatted with 6 columns repre
 6	.	CH	O	3	punct
 ```
 
-In addition, the output can be formatted following the 10-column CoNLL format where the last column is used to represent NER predictions. This can be done by adding `output_type='conll'` into the `model.annotate()` function. Also, in the `model.annotate()` function, the value of the parameter `batch_size` can be adjusted to fit your computer's memory instead of using the default one at 1  (`batch_size=1`). Here, a larger `batch_size` would lead to a faster performance speed.
+The output can be formatted following the 10-column CoNLL format where the last column is used to represent NER predictions. This can be done by adding `output_type='conll'` into the `model.annotate()` function. 
+
+Also, in the `model.annotate()` function, the value of the parameter `batch_size` can be adjusted to fit your computer's memory instead of using the default one at 1  (`batch_size=1`). Here, a larger `batch_size` would lead to a faster performance speed.
+
+## <a name="pretrained"></a> Pre-trained PhoNLP model for Vietnamese
+
+- The pre-trained PhoNLP model for Vietnamese can be manually downloaded from [https://public.vinai.io/phonlp.pt](https://public.vinai.io/phonlp.pt).
+- Or it can be downloaded as follows:
+
+```python
+import phonlp
+# Automatically download the pre-trained PhoNLP model for Vietnamese
+# and save it in a local machine folder
+phonlp.download(save_dir='./pretrained_phonlp')
+# Load the pre-trained PhoNLP model for Vietnamese
+model = phonlp.load(save_dir='./pretrained_phonlp')
+# Annotate a corpus where each line represents a word-segmented sentence
+model.annotate(input_file='input.txt', output_file='output.txt')
+# Annotate a word-segmented sentence
+model.print_out(model.annotate(text="Tôi đang làm_việc tại VinAI ."))
+```
+
+### Using VnCoreNLP to perform word and sentence segmentation on raw Vietnamese texts 
+
+In case the input Vietnamese texts are `raw`, i.e. without word and sentence segmentation, a word segmenter must be applied to produce word-segmented sentences before feeding to the pre-trained PhoNLP model for Vietnamese. This section presents an example of using [VnCoreNLP](https://github.com/vncorenlp/VnCoreNLP) to perform word and sentence segmentation. 
+
+#### Installation
+
+	# Install the vncorenlp python wrapper
+	pip3 install vncorenlp
+	
+	# Download VnCoreNLP-1.1.1.jar & its word segmentation component
+	mkdir -p vncorenlp/models/wordsegmenter
+	wget https://raw.githubusercontent.com/vncorenlp/VnCoreNLP/master/VnCoreNLP-1.1.1.jar
+	wget https://raw.githubusercontent.com/vncorenlp/VnCoreNLP/master/models/wordsegmenter/vi-vocab
+	wget https://raw.githubusercontent.com/vncorenlp/VnCoreNLP/master/models/wordsegmenter/wordsegmenter.rdr
+	mv VnCoreNLP-1.1.1.jar vncorenlp/ 
+	mv vi-vocab vncorenlp/models/wordsegmenter/
+	mv wordsegmenter.rdr vncorenlp/models/wordsegmenter/
+
+`VnCoreNLP-1.1.1.jar` (27MB) and folder `models` must be placed in the same working folder, here is `vncorenlp`. Note that `Java 1.8+` is also required to be able to run VnCoreNLP.
+
+#### Example usage
+
+```python
+# See more details at: https://github.com/vncorenlp/VnCoreNLP
+
+# Load rdrsegmenter from VnCoreNLP
+from vncorenlp import VnCoreNLP
+rdrsegmenter = VnCoreNLP("/Absolute-path-to/vncorenlp/VnCoreNLP-1.1.1.jar", annotators="wseg", max_heap_size='-Xmx500m') 
+
+# Input 
+text = "Ông Nguyễn Khắc Chúc  đang làm việc tại Đại học Quốc gia Hà Nội. Bà Lan, vợ ông Chúc, cũng làm việc tại đây."
+
+# To perform word (and sentence) segmentation
+sentences = rdrsegmenter.tokenize(text) 
+for sentence in sentences:
+	print(" ".join(sentence))
+```
