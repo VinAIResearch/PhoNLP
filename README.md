@@ -127,10 +127,13 @@ python3 run_phonlp.py --mode annotate --save_dir ./phonlp_tmp \
 
 ```python
 import phonlp
+
 # Load the trained PhoNLP model
 model = phonlp.load(save_dir='./phonlp_tmp')
+
 # Annotate a corpus where each line represents a word-segmented sentence
 model.annotate(input_file='input.txt', output_file='output.txt')
+
 # Annotate a word-segmented sentence
 model.print_out(model.annotate(text="Tôi đang làm_việc tại VinAI ."))
 ```
@@ -157,6 +160,7 @@ Also, in the `model.annotate()` function, the value of the parameter `batch_size
 
 ```python
 import phonlp
+
 # Automatically download the pre-trained PhoNLP model for Vietnamese
 # and save it in a local machine folder
 phonlp.download(save_dir='./pretrained_phonlp')
