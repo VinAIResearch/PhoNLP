@@ -160,10 +160,13 @@ import phonlp
 # Automatically download the pre-trained PhoNLP model for Vietnamese
 # and save it in a local machine folder
 phonlp.download(save_dir='./pretrained_phonlp')
+
 # Load the pre-trained PhoNLP model for Vietnamese
 model = phonlp.load(save_dir='./pretrained_phonlp')
+
 # Annotate a corpus where each line represents a word-segmented sentence
 model.annotate(input_file='input.txt', output_file='output.txt')
+
 # Annotate a word-segmented sentence
 model.print_out(model.annotate(text="Tôi đang làm_việc tại VinAI ."))
 ```
@@ -174,34 +177,21 @@ In case the input Vietnamese texts are `raw`, i.e. without word and sentence seg
 
 #### Installation
 
-	# Install the vncorenlp python wrapper
-	pip3 install vncorenlp
-	
-	# Download VnCoreNLP-1.1.1.jar & its word segmentation component
-	mkdir -p vncorenlp/models/wordsegmenter
-	wget https://raw.githubusercontent.com/vncorenlp/VnCoreNLP/master/VnCoreNLP-1.1.1.jar
-	wget https://raw.githubusercontent.com/vncorenlp/VnCoreNLP/master/models/wordsegmenter/vi-vocab
-	wget https://raw.githubusercontent.com/vncorenlp/VnCoreNLP/master/models/wordsegmenter/wordsegmenter.rdr
-	mv VnCoreNLP-1.1.1.jar vncorenlp/ 
-	mv vi-vocab vncorenlp/models/wordsegmenter/
-	mv wordsegmenter.rdr vncorenlp/models/wordsegmenter/
-
-`VnCoreNLP-1.1.1.jar` (27MB) and folder `models` must be placed in the same working folder, here is `vncorenlp`. Note that `Java 1.8+` is also required to be able to run VnCoreNLP.
+	pip3 install py_vncorenlp
 
 #### Example usage
 
 ```python
-# See more details at: https://github.com/vncorenlp/VnCoreNLP
+import py_vncorenlp
 
-# Load rdrsegmenter from VnCoreNLP
-from vncorenlp import VnCoreNLP
-rdrsegmenter = VnCoreNLP("/Absolute-path-to/vncorenlp/VnCoreNLP-1.1.1.jar", annotators="wseg", max_heap_size='-Xmx500m') 
+# Automatically download VnCoreNLP models from the original repository
+# and save them in some local machine folder
+py_vncorenlp.download_model(save_dir='./vncorenlp')
 
-# Input 
-text = "Ông Nguyễn Khắc Chúc  đang làm việc tại Đại học Quốc gia Hà Nội. Bà Lan, vợ ông Chúc, cũng làm việc tại đây."
+# Load VnCoreNLP for word and sentence segmentation
+rdrsegmenter = py_vncorenlp.VnCoreNLP(annotators=["wseg"], save_dir='./vncorenlp')
 
-# To perform word (and sentence) segmentation
-sentences = rdrsegmenter.tokenize(text) 
-for sentence in sentences:
-	print(" ".join(sentence))
+# Perform word and sentence segmentation 
+print(rdrsegmenter.word_segment("Ông Nguyễn Khắc Chúc  đang làm việc tại Đại học Quốc gia Hà Nội. Bà Lan, vợ ông Chúc, cũng làm việc tại đây."))
+# ['Ông Nguyễn_Khắc_Chúc đang làm_việc tại Đại_học Quốc_gia Hà_Nội .', 'Bà Lan , vợ ông Chúc , cũng làm_việc tại đây .']
 ```
