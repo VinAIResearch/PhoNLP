@@ -188,12 +188,12 @@ In case the input Vietnamese texts are `raw`, i.e. without word and sentence seg
 ```python
 import py_vncorenlp
 
-# Automatically download VnCoreNLP models from the original repository
+# Automatically download VnCoreNLP components from the original repository
 # and save them in some local machine folder
-py_vncorenlp.download_model(save_dir='./vncorenlp')
+py_vncorenlp.download_model(save_dir='/absolute/path/to/vncorenlp')
 
 # Load VnCoreNLP for word and sentence segmentation
-rdrsegmenter = py_vncorenlp.VnCoreNLP(annotators=["wseg"], save_dir='./vncorenlp')
+rdrsegmenter = py_vncorenlp.VnCoreNLP(annotators=["wseg"], save_dir='/absolute/path/to/vncorenlp')
 
 # Perform word and sentence segmentation 
 print(rdrsegmenter.word_segment("Ông Nguyễn Khắc Chúc  đang làm việc tại Đại học Quốc gia Hà Nội. Bà Lan, vợ ông Chúc, cũng làm việc tại đây."))
