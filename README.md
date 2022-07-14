@@ -129,10 +129,10 @@ python3 run_phonlp.py --mode annotate --save_dir ./phonlp_tmp \
 import phonlp
 
 # Load the trained PhoNLP model
-model = phonlp.load(save_dir='./phonlp_tmp')
+model = phonlp.load(save_dir='/absolute/path/to/phonlp_tmp')
 
 # Annotate a corpus where each line represents a word-segmented sentence
-model.annotate(input_file='input.txt', output_file='output.txt')
+model.annotate(input_file='/absolute/path/to/input.txt', output_file='/absolute/path/to/output.txt')
 
 # Annotate a word-segmented sentence
 model.print_out(model.annotate(text="Tôi đang làm_việc tại VinAI ."))
@@ -163,13 +163,13 @@ import phonlp
 
 # Automatically download the pre-trained PhoNLP model for Vietnamese
 # and save it in a local machine folder
-phonlp.download(save_dir='./pretrained_phonlp')
+phonlp.download(save_dir='/absolute/path/to/pretrained_phonlp')
 
 # Load the pre-trained PhoNLP model for Vietnamese
-model = phonlp.load(save_dir='./pretrained_phonlp')
+model = phonlp.load(save_dir='/absolute/path/to/pretrained_phonlp')
 
 # Annotate a corpus where each line represents a word-segmented sentence
-model.annotate(input_file='input.txt', output_file='output.txt')
+model.annotate(input_file='/absolute/path/to/input.txt', output_file='/absolute/path/to/output.txt')
 
 # Annotate a word-segmented sentence
 model.print_out(model.annotate(text="Tôi đang làm_việc tại VinAI ."))
@@ -177,7 +177,7 @@ model.print_out(model.annotate(text="Tôi đang làm_việc tại VinAI ."))
 
 ### Using VnCoreNLP to perform word and sentence segmentation on raw Vietnamese texts 
 
-In case the input Vietnamese texts are `raw`, i.e. without word and sentence segmentation, a word segmenter must be applied to produce word-segmented sentences before feeding to the pre-trained PhoNLP model for Vietnamese. This section presents an example of using [VnCoreNLP](https://github.com/vncorenlp/VnCoreNLP) to perform word and sentence segmentation. 
+In case the input Vietnamese texts are `raw`, i.e. without word and sentence segmentation, a word segmenter must be applied to produce word-segmented sentences before feeding to the pre-trained PhoNLP model for Vietnamese. Users should use [VnCoreNLP](https://github.com/vncorenlp/VnCoreNLP) to perform word and sentence segmentation (as it produces the same Vietnamese tone normalization that was applied to the data of the POS tagging, NER and dependency parsing tasks). 
 
 #### Installation
 
