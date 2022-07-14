@@ -1,4 +1,4 @@
-## POS tags, NER types and dependency labels in VnCoreNLP
+## POS tags, NER types and dependency labels
 
 The following sections are to briefly describe  [POS tags](https://github.com/vncorenlp/VnCoreNLP/blob/master/VLSP2013_POS_tagset.pdf), [NER types](http://vlsp.org.vn/vlsp2016/eval/ner) and [dependency labels](https://github.com/vncorenlp/VnCoreNLP/blob/master/VnDT-treebank-description.pdf) used in VnCoreNLP. See details in [Link-to-POS-tag-description](https://github.com/vncorenlp/VnCoreNLP/blob/master/VLSP2013_POS_tagset.pdf), [Link-to-NER-type-description](http://vlsp.org.vn/vlsp2016/eval/ner) and [Link-to-dependency-label-description](https://github.com/vncorenlp/VnCoreNLP/blob/master/VnDT-treebank-description.pdf).  
 
