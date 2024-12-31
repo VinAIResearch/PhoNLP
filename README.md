@@ -155,7 +155,7 @@ Also, in the `model.annotate()` function, the value of the parameter `batch_size
 
 ## <a name="pretrained"></a> Pre-trained PhoNLP model for Vietnamese
 
-- The pre-trained PhoNLP model for Vietnamese can be manually downloaded from [https://public.vinai.io/phonlp.pt](https://public.vinai.io/phonlp.pt).
+- The pre-trained PhoNLP model for Vietnamese can be manually downloaded from [HERE](https://drive.google.com/file/d/1wfVGVsKkg7sH8R_3ECRoQ46DVOAmsNkQ/view?usp=sharing).
 - Or it can be downloaded as follows:
 
 ```python
